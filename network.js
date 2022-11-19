@@ -1,0 +1,1 @@
+export function uploadSizetoArtifact(s0) {}
