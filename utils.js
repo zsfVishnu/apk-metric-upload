@@ -14,7 +14,7 @@ export function getPascalCase(s) {
 }
 
 export function getBuildPath(s) {
-    outputPath = "app/build/outputs/apk/"
+    let outputPath = "app/build/outputs/apk/"
     s = s.toLowerCase()
     s = s.trim()
     if(s=== "debug") {
