@@ -9507,6 +9507,14 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 7880:
+/***/ ((module) => {
+
+module.exports = eval("require")("@actions/artifact");
+
+
+/***/ }),
+
 /***/ 5347:
 /***/ ((module) => {
 
@@ -9714,36 +9722,62 @@ function getMasterBranchSize(flavorToBuild, buildPath) {
     const apkSize = (0,external_child_process_namespaceObject.execSync)(`cd ${buildPath} && du -k app-${apkSuffix}.apk`, { encoding: 'utf-8' }).trim().split(/\s+/)[0];
     return apkSize
 }
-;// CONCATENATED MODULE: ./utils.js
+;// CONCATENATED MODULE: ./network.js
+const artifact = __nccwpck_require__(7880);
 
-function getPascalCase(s) {
-    s = s.toLowerCase()
-    s = s.trim()
-    if(s=== "debug") {
-        return "Debug"
-    }
+
+async function uploadArtifact(s0) {
+
+    const artifactClient = artifact.create()
+    const artifactName = 'apk-metric-artifact';
+    const files = [
     
-    if(s.includes("debug")) {
-        const fl = s.split("debug")[0]
-        return (fl.charAt(0).toUpperCase() + fl.slice(1) + "Debug")
+        `apk-metric.json`
+    ]
+    const rootDirectory = `.`
+    const options = {
+        continueOnError: true
     }
-    return 0
+    const uploadResult = await artifactClient.uploadArtifact(artifactName, files, rootDirectory, options)
+}
+;// CONCATENATED MODULE: ./utils.js
+function getPascalCase(s) {
+  s = s.toLowerCase();
+  s = s.trim();
+  if (s === "debug") {
+    return "Debug";
+  }
+
+  if (s.includes("debug")) {
+    const fl = s.split("debug")[0];
+    return fl.charAt(0).toUpperCase() + fl.slice(1) + "Debug";
+  }
+  return 0;
 }
 
 function getBuildPath(s) {
-    let outputPath = "app/build/outputs/apk/"
-    s = s.toLowerCase()
-    s = s.trim()
-    if(s=== "debug") {
-        return outputPath + "debug/"
-    }
-    
-    if(s.includes("debug")) {
-        const fl = s.split("debug")[0]
-        return outputPath + fl + "/debug/"
-    }
-    return 0
+  let outputPath = "app/build/outputs/apk/";
+  s = s.toLowerCase();
+  s = s.trim();
+  if (s === "debug") {
+    return outputPath + "debug/";
+  }
+
+  if (s.includes("debug")) {
+    const fl = s.split("debug")[0];
+    return outputPath + fl + "/debug/";
+  }
+  return 0;
 }
+
+function writeMetricsToFile(s0) {
+  var dict = { "master size": s0 };
+  var dstring = JSON.stringify(dict);
+  fs.writeFile("apk-metric.json", dstring, function (err, result) {
+    if (err) console.log("error", err);
+  });
+}
+
 ;// CONCATENATED MODULE: ./index.js
 
 
@@ -9764,7 +9798,10 @@ try {
     const bp = getBuildPath(flavorToBuild)
     console.log(`Building flavor:  ${flavorToBuild}!`);
     const s0 = getMasterBranchSize(pascalFlavour, bp)
-    // uploadSizetoArtifact(s0)
+
+    writeMetricsToFile(s0)
+
+    uploadArtifact()
     console.log("***************")
     console.log(`pascalFlavor : ${pascalFlavour}`)
     console.log(`build path : { ${bp}}`)

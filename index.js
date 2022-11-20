@@ -2,8 +2,8 @@ import { getInput, setFailed } from '@actions/core';
 import github from '@actions/github';
 const GITHUB_TOKEN = getInput('GITHUB_TOKEN');
 import { getMasterBranchSize } from './evaluator';
-import { uploadSizetoArtifact } from './network';
-import { getBuildPath, getPascalCase } from './utils';
+import { uploadArtifact } from './network';
+import { getBuildPath, getPascalCase, writeMetricsToFile } from './utils';
 
 try {
     const flavorToBuild = getInput('flavor');
@@ -17,7 +17,10 @@ try {
     const bp = getBuildPath(flavorToBuild)
     console.log(`Building flavor:  ${flavorToBuild}!`);
     const s0 = getMasterBranchSize(pascalFlavour, bp)
-    // uploadSizetoArtifact(s0)
+
+    writeMetricsToFile(s0)
+
+    uploadArtifact()
     console.log("***************")
     console.log(`pascalFlavor : ${pascalFlavour}`)
     console.log(`build path : { ${bp}}`)
