@@ -5,10 +5,9 @@
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
-var __webpack_unused_export__;
 
-__webpack_unused_export__ = ({ value: true });
-__webpack_unused_export__ = void 0;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.create = void 0;
 const artifact_client_1 = __nccwpck_require__(5727);
 /**
  * Constructs an ArtifactClient
@@ -16,7 +15,7 @@ const artifact_client_1 = __nccwpck_require__(5727);
 function create() {
     return artifact_client_1.DefaultArtifactClient.create();
 }
-__webpack_unused_export__ = create;
+exports.create = create;
 //# sourceMappingURL=artifact-client.js.map
 
 /***/ }),
@@ -16457,26 +16456,25 @@ function getMasterBranchSize(flavorToBuild, buildPath) {
     const apkSize = (0,external_child_process_namespaceObject.execSync)(`cd ${buildPath} && du -k app-${apkSuffix}.apk`, { encoding: 'utf-8' }).trim().split(/\s+/)[0];
     return apkSize
 }
-// EXTERNAL MODULE: ./node_modules/@actions/artifact/lib/artifact-client.js
-var artifact_client = __nccwpck_require__(6954);
 ;// CONCATENATED MODULE: ./network.js
-
-
+const artifact = __nccwpck_require__(6954);
 
 async function uploadArtifact(s0) {
-
-    const artifactClient = artifact_client["default"].create()
-    const artifactName = 'apk-metric-artifact';
-    const files = [
-    
-        `apk-metric.json`
-    ]
-    const rootDirectory = `.`
-    const options = {
-        continueOnError: true
-    }
-    const uploadResult = await artifactClient.uploadArtifact(artifactName, files, rootDirectory, options)
+  const artifactClient = artifact.create();
+  const artifactName = "apk-metric-artifact";
+  const files = [`apk-metric.json`];
+  const rootDirectory = `.`;
+  const options = {
+    continueOnError: true,
+  };
+  const uploadResult = await artifactClient.uploadArtifact(
+    artifactName,
+    files,
+    rootDirectory,
+    options
+  );
 }
+
 // EXTERNAL MODULE: external "fs"
 var external_fs_ = __nccwpck_require__(7147);
 var external_fs_default = /*#__PURE__*/__nccwpck_require__.n(external_fs_);
