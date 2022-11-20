@@ -46,15 +46,16 @@ try {
   const pascalFlavour = (0,_utils__WEBPACK_IMPORTED_MODULE_3__/* .getPascalCase */ .RJ)(flavorToBuild);
   if (pascalFlavour === 0) {
     let err = new Error("Error with building flavor");
-    err.description = "Only debug flavors are allowed. Please check flavor guidelines";
+    err.description =
+      "Only debug flavors are allowed. Please check flavor guidelines";
     throw err;
   }
 
   const bp = (0,_utils__WEBPACK_IMPORTED_MODULE_3__/* .getBuildPath */ .HF)(flavorToBuild);
   console.log(`Building flavor:  ${flavorToBuild}!`);
   const s0 = (0,_evaluator__WEBPACK_IMPORTED_MODULE_1__/* .getMasterBranchSize */ .B)(pascalFlavour, bp);
-  (0,_utils__WEBPACK_IMPORTED_MODULE_3__/* .writeMetricsToFile */ .HN)(s0);
-  await (0,_network__WEBPACK_IMPORTED_MODULE_2__/* .uploadArtifact */ .x)();
+  await (0,_utils__WEBPACK_IMPORTED_MODULE_3__/* .writeMetricsToFile */ .HN)(s0);
+  (0,_network__WEBPACK_IMPORTED_MODULE_2__/* .uploadArtifact */ .x)();
 } catch (error) {
   (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(error.message);
 }
@@ -73,7 +74,7 @@ __webpack_handle_async_dependencies__();
 /* harmony export */ });
 const artifact = __nccwpck_require__(6954);
 
-async function uploadArtifact(s0) {
+function uploadArtifact(s0) {
   const artifactClient = artifact.create();
   const artifactName = "apk-metric-artifact";
   const files = [`apk-metric.json`];
@@ -81,12 +82,7 @@ async function uploadArtifact(s0) {
   const options = {
     continueOnError: false,
   };
-  await artifactClient.uploadArtifact(
-    artifactName,
-    files,
-    rootDirectory,
-    options
-  );
+  artifactClient.uploadArtifact(artifactName, files, rootDirectory, options);
 }
 
 
@@ -9615,10 +9611,10 @@ function getBuildPath(s) {
   return 0;
 }
 
-function writeMetricsToFile(s0) {
+async function writeMetricsToFile(s0) {
   var dict = { "master size": s0 };
   var dstring = JSON.stringify(dict);
-  fs__WEBPACK_IMPORTED_MODULE_0___default().writeFile(`apk-metric.json`, dstring, function (err, result) {
+  writeFile(`apk-metric.json`, dstring, function (err, result) {
     if (err) console.log("writing error", err);
   });
 }

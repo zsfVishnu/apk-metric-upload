@@ -8,15 +8,16 @@ try {
   const pascalFlavour = getPascalCase(flavorToBuild);
   if (pascalFlavour === 0) {
     let err = new Error("Error with building flavor");
-    err.description = "Only debug flavors are allowed. Please check flavor guidelines";
+    err.description =
+      "Only debug flavors are allowed. Please check flavor guidelines";
     throw err;
   }
 
   const bp = getBuildPath(flavorToBuild);
   console.log(`Building flavor:  ${flavorToBuild}!`);
   const s0 = getMasterBranchSize(pascalFlavour, bp);
-  writeMetricsToFile(s0);
-  await uploadArtifact();
+  await writeMetricsToFile(s0);
+  uploadArtifact();
 } catch (error) {
   setFailed(error.message);
 }

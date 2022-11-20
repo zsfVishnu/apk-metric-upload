@@ -29,10 +29,10 @@ export function getBuildPath(s) {
   return 0;
 }
 
-export function writeMetricsToFile(s0) {
+export async function writeMetricsToFile(s0) {
   var dict = { "master size": s0 };
   var dstring = JSON.stringify(dict);
-  fs.writeFile(`apk-metric.json`, dstring, function (err, result) {
+  writeFile(`apk-metric.json`, dstring, function (err, result) {
     if (err) console.log("writing error", err);
   });
 }
