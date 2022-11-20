@@ -1,6 +1,7 @@
 # Apk-metric-upload
 
-This action uploads your debug app metrics to a workflow artifact which can be used by our app-size-tracker action to help you track your app metrics like size, build time etc
+
+This action uploads your debug app metrics to a workflow artifact which can be used by our [app-size-tracker](https://github.com/zsfVishnu/apk-size-tracker) action to help you track your app metrics like size, build time etc
 
 # Usage
 
@@ -24,21 +25,22 @@ jobs:
           
       - name: Upload action step
         id: apkSize
-        uses: zsfVishnu/apk-metric-upload@main
+        uses: zsfVishnu/apk-metric-upload@v1.0.0
         with:
           flavor: 'debug'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
 ```
 
 # Inputs
-The action takes two inputs to upload your metrics - flavor and GITHUB_TOKEN.
+The action only needs the debug flavor name to upload your metrics.
 
 ## flavor
-This specifies which debug flavor of your app would you like to track. The action only creates debug builds since release builds might require keys and/or confidential information. Even though we make debug apk's it gives you an indicative measure of your app metrics.
+This specifies which debug flavor of your app would you like to track. The action only creates debug builds since release builds might require keys and/or confidential information.
 
-## GITHUB_TOKEN
-Since all metric information are stored within the user's github repository itself, we require this token to upload artifacts into the workflow. Please note that you won't have to create any new token and this works with github's {{ secrets.GITHUB_TOKEN }}. At the start of each workflow run, GitHub automatically creates a unique GITHUB_TOKEN secret to use in your workflow. You can use the GITHUB_TOKEN to authenticate the workflow run. 
-``` 
-GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-```
+# Where does the upload go?
+The artifact is uploaded to the workflow in which the action is run.
+<img width="1784" alt="Screenshot 2022-11-20 at 11 07 41 PM" src="https://user-images.githubusercontent.com/34836841/202917191-4458a24a-1e06-4feb-9577-59aa82d5ee9e.png">
+
+
+
+
