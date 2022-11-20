@@ -1,3 +1,5 @@
+import fs from 'fs'
+
 export function getPascalCase(s) {
   s = s.toLowerCase();
   s = s.trim();
