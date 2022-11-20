@@ -1,4 +1,3 @@
-import { execSync } from "child_process";
 import fs from "fs";
 
 export function getPascalCase(s) {
@@ -36,6 +35,4 @@ export function writeMetricsToFile(s0) {
   fs.writeFile(`apk-metric.json`, dstring, function (err, result) {
     if (err) console.log("writing error", err);
   });
-  console.log(execSync("ls", { encoding: "utf-8" }));
-  console.log(execSync("pwd", { encoding: "utf-8" }));
 }

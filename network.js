@@ -8,7 +8,7 @@ export async function uploadArtifact(s0) {
   const options = {
     continueOnError: false,
   };
-  const uploadResult = await artifactClient.uploadArtifact(
+  await artifactClient.uploadArtifact(
     artifactName,
     files,
     rootDirectory,
