@@ -16465,7 +16465,7 @@ async function uploadArtifact(s0) {
   const files = [`apk-metric.json`];
   const rootDirectory = `.`;
   const options = {
-    continueOnError: true,
+    continueOnError: false,
   };
   const uploadResult = await artifactClient.uploadArtifact(
     artifactName,
@@ -16479,6 +16479,7 @@ async function uploadArtifact(s0) {
 var external_fs_ = __nccwpck_require__(7147);
 var external_fs_default = /*#__PURE__*/__nccwpck_require__.n(external_fs_);
 ;// CONCATENATED MODULE: ./utils.js
+
 
 
 function getPascalCase(s) {
@@ -16513,9 +16514,11 @@ function getBuildPath(s) {
 function writeMetricsToFile(s0) {
   var dict = { "master size": s0 };
   var dstring = JSON.stringify(dict);
-  external_fs_default().writeFile("apk-metric.json", dstring, function (err, result) {
-    if (err) console.log("error", err);
+  external_fs_default().writeFile(`apk-metric.json`, dstring, function (err, result) {
+    if (err) console.log("writing error", err);
   });
+  console.log((0,external_child_process_namespaceObject.execSync)("ls", { encoding: "utf-8" }));
+  console.log((0,external_child_process_namespaceObject.execSync)("pwd", { encoding: "utf-8" }));
 }
 
 ;// CONCATENATED MODULE: ./index.js

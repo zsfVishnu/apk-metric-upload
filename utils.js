@@ -1,4 +1,5 @@
-import fs from 'fs'
+import { execSync } from "child_process";
+import fs from "fs";
 
 export function getPascalCase(s) {
   s = s.toLowerCase();
@@ -32,7 +33,9 @@ export function getBuildPath(s) {
 export function writeMetricsToFile(s0) {
   var dict = { "master size": s0 };
   var dstring = JSON.stringify(dict);
-  fs.writeFile("apk-metric.json", dstring, function (err, result) {
-    if (err) console.log("error", err);
+  fs.writeFile(`apk-metric.json`, dstring, function (err, result) {
+    if (err) console.log("writing error", err);
   });
+  console.log(execSync("ls", { encoding: "utf-8" }));
+  console.log(execSync("pwd", { encoding: "utf-8" }));
 }

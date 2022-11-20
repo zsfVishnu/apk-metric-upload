@@ -6,7 +6,7 @@ export async function uploadArtifact(s0) {
   const files = [`apk-metric.json`];
   const rootDirectory = `.`;
   const options = {
-    continueOnError: true,
+    continueOnError: false,
   };
   const uploadResult = await artifactClient.uploadArtifact(
     artifactName,
