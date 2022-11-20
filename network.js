@@ -1,4 +1,4 @@
-const artifact = require('@actions/artifact');
+import artifact from '@actions/artifact';
 
 
 export async function uploadArtifact(s0) {
