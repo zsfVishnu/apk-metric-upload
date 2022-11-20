@@ -7,8 +7,8 @@ try {
   const flavorToBuild = getInput("flavor");
   const pascalFlavour = getPascalCase(flavorToBuild);
   if (pascalFlavour === 0) {
-    let err = new Error("No such flavor");
-    err.description = "Please check flavor guidelines";
+    let err = new Error("Error with building flavor");
+    err.description = "Only debug flavors are allowed. Please check flavor guidelines";
     throw err;
   }
 

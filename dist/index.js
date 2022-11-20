@@ -45,8 +45,8 @@ try {
   const flavorToBuild = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("flavor");
   const pascalFlavour = (0,_utils__WEBPACK_IMPORTED_MODULE_3__/* .getPascalCase */ .RJ)(flavorToBuild);
   if (pascalFlavour === 0) {
-    let err = new Error("No such flavor");
-    err.description = "Please check flavor guidelines";
+    let err = new Error("Error with building flavor");
+    err.description = "Only debug flavors are allowed. Please check flavor guidelines";
     throw err;
   }
 
