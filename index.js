@@ -3,7 +3,7 @@ import github from '@actions/github';
 const GITHUB_TOKEN = getInput('GITHUB_TOKEN');
 import { getMasterBranchSize } from './evaluator';
 import { uploadSizetoArtifact } from './network';
-import { getBuildPath } from './utils';
+import { getBuildPath, getPascalCase } from './utils';
 
 try {
     const flavorToBuild = getInput('flavor');

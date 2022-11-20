@@ -9716,7 +9716,7 @@ function getMasterBranchSize(flavorToBuild, buildPath) {
 }
 ;// CONCATENATED MODULE: ./utils.js
 
-function utils_getPascalCase(s) {
+function getPascalCase(s) {
     s = s.toLowerCase()
     s = s.trim()
     if(s=== "debug") {
