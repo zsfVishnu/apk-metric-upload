@@ -9614,7 +9614,7 @@ function getBuildPath(s) {
 async function writeMetricsToFile(s0) {
   var dict = { "master size": s0 };
   var dstring = JSON.stringify(dict);
-  writeFile(`apk-metric.json`, dstring, function (err, result) {
+  fs__WEBPACK_IMPORTED_MODULE_0___default().writeFile(`apk-metric.json`, dstring, function (err, result) {
     if (err) console.log("writing error", err);
   });
 }

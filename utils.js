@@ -32,7 +32,7 @@ export function getBuildPath(s) {
 export async function writeMetricsToFile(s0) {
   var dict = { "master size": s0 };
   var dstring = JSON.stringify(dict);
-  writeFile(`apk-metric.json`, dstring, function (err, result) {
+  fs.writeFile(`apk-metric.json`, dstring, function (err, result) {
     if (err) console.log("writing error", err);
   });
 }
