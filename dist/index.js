@@ -40,7 +40,11 @@ __nccwpck_require__.r(__webpack_exports__);
 try {
   const flavorToBuild = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("flavor");
   const dir = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("working-directory");
+  console.log(execSync(`ls`, { encoding: "utf-8" }));
+
   (0,_utils__WEBPACK_IMPORTED_MODULE_3__/* .handleWorkingDir */ .Zc)(dir);
+  console.log(execSync(`ls`, { encoding: "utf-8" })); //handle flavor casing
+  console.log(execSync(`pwd`, { encoding: "utf-8" })); //handle flavor casing
   const pascalFlavour = (0,_utils__WEBPACK_IMPORTED_MODULE_3__/* .getPascalCase */ .RJ)(flavorToBuild);
   if (pascalFlavour === 0) {
     let err = new Error("Error with building flavor");
