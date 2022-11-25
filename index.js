@@ -1,10 +1,17 @@
 import { getInput, setFailed } from "@actions/core";
 import { getMasterBranchSize } from "./evaluator";
 import { uploadArtifact } from "./network";
-import { getBuildPath, getPascalCase, writeMetricsToFile } from "./utils";
+import {
+  getBuildPath,
+  getPascalCase,
+  handleWorkingDir,
+  writeMetricsToFile,
+} from "./utils";
 
 try {
   const flavorToBuild = getInput("flavor");
+  const dir = getInput("working-directory");
+  handleWorkingDir(dir);
   const pascalFlavour = getPascalCase(flavorToBuild);
   if (pascalFlavour === 0) {
     let err = new Error("Error with building flavor");

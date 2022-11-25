@@ -5,6 +5,9 @@ inputs:
     description: 'debug flavor of the apk to build'
     required: true
     default: 'debug'
+  working-directory:  
+    description: 'working directory where the action should run'
+    required: false
 runs:
   using: 'node16'
   main: 'dist/index.js'

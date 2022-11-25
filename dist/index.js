@@ -1,25 +1,21 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 3074:
+/***/ 4074:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
-
-// EXPORTS
-__nccwpck_require__.d(__webpack_exports__, {
-  "B": () => (/* binding */ getMasterBranchSize)
-});
-
-;// CONCATENATED MODULE: external "child_process"
-const external_child_process_namespaceObject = require("child_process");
-;// CONCATENATED MODULE: ./evaluator.js
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "B": () => (/* binding */ getMasterBranchSize)
+/* harmony export */ });
+/* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2081);
+/* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(child_process__WEBPACK_IMPORTED_MODULE_0__);
 
 
 function getMasterBranchSize(flavorToBuild, buildPath) {
     const apkSuffix = flavorToBuild.toLowerCase()
-    ;(0,external_child_process_namespaceObject.execSync)(`./gradlew assemble${flavorToBuild}`, { encoding: 'utf-8' }); //handle flavor casing
-    const apkSize = (0,external_child_process_namespaceObject.execSync)(`cd ${buildPath} && du -k app-${apkSuffix}.apk`, { encoding: 'utf-8' }).trim().split(/\s+/)[0];
+    ;(0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`./gradlew assemble${flavorToBuild}`, { encoding: 'utf-8' }); //handle flavor casing
+    const apkSize = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd ${buildPath} && du -k app-${apkSuffix}.apk`, { encoding: 'utf-8' }).trim().split(/\s+/)[0];
     return apkSize
 }
 
@@ -33,7 +29,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__) => {
 __nccwpck_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(6024);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _evaluator__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(3074);
+/* harmony import */ var _evaluator__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(4074);
 /* harmony import */ var _network__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(513);
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(759);
 
@@ -43,6 +39,8 @@ __nccwpck_require__.r(__webpack_exports__);
 
 try {
   const flavorToBuild = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("flavor");
+  const dir = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("working-directory");
+  (0,_utils__WEBPACK_IMPORTED_MODULE_3__/* .handleWorkingDir */ .Zc)(dir);
   const pascalFlavour = (0,_utils__WEBPACK_IMPORTED_MODULE_3__/* .getPascalCase */ .RJ)(flavorToBuild);
   if (pascalFlavour === 0) {
     let err = new Error("Error with building flavor");
@@ -722,7 +720,7 @@ const zlib = __importStar(__nccwpck_require__(9796));
 const utils_1 = __nccwpck_require__(5218);
 const url_1 = __nccwpck_require__(7310);
 const status_reporter_1 = __nccwpck_require__(6631);
-const perf_hooks_1 = __nccwpck_require__(4074);
+const perf_hooks_1 = __nccwpck_require__(8623);
 const http_manager_1 = __nccwpck_require__(3958);
 const config_variables_1 = __nccwpck_require__(3780);
 const requestUtils_1 = __nccwpck_require__(2924);
@@ -1492,7 +1490,7 @@ const utils_1 = __nccwpck_require__(5218);
 const config_variables_1 = __nccwpck_require__(3780);
 const util_1 = __nccwpck_require__(3837);
 const url_1 = __nccwpck_require__(7310);
-const perf_hooks_1 = __nccwpck_require__(4074);
+const perf_hooks_1 = __nccwpck_require__(8623);
 const status_reporter_1 = __nccwpck_require__(6631);
 const http_client_1 = __nccwpck_require__(2745);
 const http_manager_1 = __nccwpck_require__(3958);
@@ -9576,10 +9574,14 @@ function wrappy (fn, cb) {
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
 /* harmony export */   "RJ": () => (/* binding */ getPascalCase),
 /* harmony export */   "HF": () => (/* binding */ getBuildPath),
-/* harmony export */   "HN": () => (/* binding */ writeMetricsToFile)
+/* harmony export */   "HN": () => (/* binding */ writeMetricsToFile),
+/* harmony export */   "Zc": () => (/* binding */ handleWorkingDir)
 /* harmony export */ });
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(7147);
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(fs__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2081);
+/* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(child_process__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(7147);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(fs__WEBPACK_IMPORTED_MODULE_1__);
+
 
 
 function getPascalCase(s) {
@@ -9614,9 +9616,13 @@ function getBuildPath(s) {
 async function writeMetricsToFile(s0) {
   var dict = { "master size": s0 };
   var dstring = JSON.stringify(dict);
-  fs__WEBPACK_IMPORTED_MODULE_0___default().writeFile(`apk-metric.json`, dstring, function (err, result) {
+  fs__WEBPACK_IMPORTED_MODULE_1___default().writeFile(`apk-metric.json`, dstring, function (err, result) {
     if (err) console.log("writing error", err);
   });
+}
+
+function handleWorkingDir(dir) {
+  (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd ${dir}`);
 }
 
 
@@ -9627,6 +9633,14 @@ async function writeMetricsToFile(s0) {
 
 "use strict";
 module.exports = require("assert");
+
+/***/ }),
+
+/***/ 2081:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("child_process");
 
 /***/ }),
 
@@ -9694,7 +9708,7 @@ module.exports = require("path");
 
 /***/ }),
 
-/***/ 4074:
+/***/ 8623:
 /***/ ((module) => {
 
 "use strict";
