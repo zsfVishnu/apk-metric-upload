@@ -32,6 +32,10 @@ __nccwpck_require__.r(__webpack_exports__);
 /* harmony import */ var _evaluator__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(4074);
 /* harmony import */ var _network__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(513);
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(759);
+/* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(2081);
+/* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__nccwpck_require__.n(child_process__WEBPACK_IMPORTED_MODULE_4__);
+
+
 
 
 
@@ -40,11 +44,11 @@ __nccwpck_require__.r(__webpack_exports__);
 try {
   const flavorToBuild = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("flavor");
   const dir = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("working-directory");
-  console.log(execSync(`ls`, { encoding: "utf-8" }));
+  console.log((0,child_process__WEBPACK_IMPORTED_MODULE_4__.execSync)(`ls`, { encoding: "utf-8" }));
 
   (0,_utils__WEBPACK_IMPORTED_MODULE_3__/* .handleWorkingDir */ .Zc)(dir);
-  console.log(execSync(`ls`, { encoding: "utf-8" })); //handle flavor casing
-  console.log(execSync(`pwd`, { encoding: "utf-8" })); //handle flavor casing
+  console.log((0,child_process__WEBPACK_IMPORTED_MODULE_4__.execSync)(`ls`, { encoding: "utf-8" })); //handle flavor casing
+  console.log((0,child_process__WEBPACK_IMPORTED_MODULE_4__.execSync)(`pwd`, { encoding: "utf-8" })); //handle flavor casing
   const pascalFlavour = (0,_utils__WEBPACK_IMPORTED_MODULE_3__/* .getPascalCase */ .RJ)(flavorToBuild);
   if (pascalFlavour === 0) {
     let err = new Error("Error with building flavor");

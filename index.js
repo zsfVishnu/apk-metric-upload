@@ -8,6 +8,8 @@ import {
   writeMetricsToFile,
 } from "./utils";
 
+import { execSync } from "child_process";
+
 try {
   const flavorToBuild = getInput("flavor");
   const dir = getInput("working-directory");
