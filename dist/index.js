@@ -9499,11 +9499,11 @@ function getMasterBranchSize(fb, buildPath, isRN) {
   const apkName = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_1__/* .getApkName */ .sJ)(fb);
   const flavorToBuild = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_1__/* .getPascalCase */ .RJ)(fb);
   isRN
-    ? getRNMasterSize(apkName, flavorToBuild)
-    : getNativeMasterSize(apkName, flavorToBuild);
+    ? getRNMasterSize(apkName, flavorToBuild, buildPath)
+    : getNativeMasterSize(apkName, flavorToBuild, buildPath);
 }
 
-function getRNMasterSize(apkName, flavorToBuild) {
+function getRNMasterSize(apkName, flavorToBuild, buildPath) {
   (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`ls yarn.lock &> /dev/null && yarn install || npm install`, {
     encoding: "utf-8",
   });
@@ -9522,7 +9522,7 @@ function getRNMasterSize(apkName, flavorToBuild) {
   return apkSize;
 }
 
-function getNativeMasterSize(apkName, flavorToBuild) {
+function getNativeMasterSize(apkName, flavorToBuild, buildPath) {
   (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`./gradlew assemble${flavorToBuild}`, { encoding: "utf-8" });
   const sizeOp = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd ${buildPath} && du -k app-${apkSuffix}.apk`, {
     encoding: "utf-8",
