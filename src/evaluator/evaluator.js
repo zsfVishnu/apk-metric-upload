@@ -2,7 +2,7 @@ import { execSync } from "child_process";
 import { getApkName, getPascalCase } from "../utils/utils";
 
 export function getMasterBranchSize(fb, buildPath, isRN) {
-  const apkName = getApkName(flavorToBuild);
+  const apkName = getApkName(fb);
   const flavorToBuild = getPascalCase(fb);
   console.log(execSync(`ls`, { encoding: "utf-8" }));
   if (isRN === "true") {
