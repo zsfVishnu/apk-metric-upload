@@ -9502,7 +9502,7 @@ function getMasterBranchSize(flavorToBuild, buildPath, isRN) {
   if (isRN === "true") {
     (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`ls`, { encoding: "utf-8" });
     (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(
-      `alias npm_or_yarn='ls yarn.lock &> /dev/null && echo yarn || echo npm`,
+      `alias npm_or_yarn='ls yarn.lock &> /dev/null && echo yarn || echo npm'`,
       { encoding: "utf-8" }
     );
     (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`$(npm_or_yarn) install`, { encoding: "utf-8" });
