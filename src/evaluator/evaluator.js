@@ -3,8 +3,9 @@ import { getApkName } from "../utils/utils";
 
 export function getMasterBranchSize(flavorToBuild, buildPath, isRN) {
   const apkName = getApkName();
+  console.log(apkName);
   execSync(`ls`, { encoding: "utf-8" });
-  if (isRN) {
+  if (isRN === "true") {
     execSync(`ls`, { encoding: "utf-8" });
     execSync(
       `alias npm_or_yarn='ls yarn.lock &> /dev/null && echo yarn || echo npm`,
