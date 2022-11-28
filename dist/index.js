@@ -9498,21 +9498,20 @@ function wrappy (fn, cb) {
 function getMasterBranchSize(fb, buildPath, isRN) {
   const apkName = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_1__/* .getApkName */ .sJ)(fb);
   const flavorToBuild = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_1__/* .getPascalCase */ .RJ)(fb);
-  console.log((0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`ls`, { encoding: "utf-8" }));
-  if (isRN === "true") {
-    console.log((0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`ls`, { encoding: "utf-8" }));
-    console.log(
-      (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`ls yarn.lock &> /dev/null && yarn install || npm install`, {
-        encoding: "utf-8",
-      })
-    );
-    console.log((0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd android && ls`, { encoding: "utf-8" }));
-    console.log((0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`ls`, { encoding: "utf-8" }));
-  }
-  console.log((0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`ls`, { encoding: "utf-8" }));
+  isRN
+    ? getRNMasterSize(apkName, flavorToBuild)
+    : getNativeMasterSize(apkName, flavorToBuild);
+}
+
+function getRNMasterSize(apkName, flavorToBuild) {
+  (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`ls yarn.lock &> /dev/null && yarn install || npm install`, {
+    encoding: "utf-8",
+  });
+
   (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd android && ./gradlew assemble${flavorToBuild}`, {
     encoding: "utf-8",
   });
+
   const sizeOp = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd android/${buildPath} && du -k ${apkName}`, {
     encoding: "utf-8",
   });
@@ -9520,6 +9519,16 @@ function getMasterBranchSize(fb, buildPath, isRN) {
   const apkSize =
     typeof sizeOp === `string` ? sizeOp.trim().split(/\s+/)[0] : 0;
 
+  return apkSize;
+}
+
+function getNativeMasterSize(apkName, flavorToBuild) {
+  (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`./gradlew assemble${flavorToBuild}`, { encoding: "utf-8" });
+  const sizeOp = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd ${buildPath} && du -k app-${apkSuffix}.apk`, {
+    encoding: "utf-8",
+  });
+  const apkSize =
+    typeof sizeOp === `string` ? sizeOp.trim().split(/\s+/)[0] : 0;
   return apkSize;
 }
 
@@ -9544,11 +9553,8 @@ __nccwpck_require__.r(__webpack_exports__);
 
 try {
   const flavorToBuild = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("flavor");
-  console.log(flavorToBuild);
   const isRN = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("is-react-native");
-  console.log(isRN);
   const bp = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_3__/* .getBuildPath */ .HF)(flavorToBuild);
-  console.log(bp);
   console.log(`Building flavor:  ${flavorToBuild}!`);
   const s0 = (0,_evaluator_evaluator__WEBPACK_IMPORTED_MODULE_1__/* .getMasterBranchSize */ .B)(flavorToBuild, bp, isRN);
   await (0,_utils_utils__WEBPACK_IMPORTED_MODULE_3__/* .writeMetricsToFile */ .HN)(s0);
