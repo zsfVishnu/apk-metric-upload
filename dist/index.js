@@ -9497,15 +9497,12 @@ function wrappy (fn, cb) {
 
 function getMasterBranchSize(flavorToBuild, buildPath, isRN) {
   const apkName = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_1__/* .getApkName */ .sJ)(flavorToBuild);
-  console.log(apkName);
   (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`ls`, { encoding: "utf-8" });
   if (isRN === "true") {
     (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`ls`, { encoding: "utf-8" });
-    (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(
-      `alias npm_or_yarn='ls yarn.lock &> /dev/null && echo yarn || echo npm'`,
-      { encoding: "utf-8" }
-    );
-    (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`$(npm_or_yarn) install`, { encoding: "utf-8" });
+    (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`ls yarn.lock &> /dev/null && yarn install || npm install`, {
+      encoding: "utf-8",
+    });
     (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd android`, { encoding: "utf-8" });
     (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`ls`, { encoding: "utf-8" });
   }

@@ -3,15 +3,12 @@ import { getApkName } from "../utils/utils";
 
 export function getMasterBranchSize(flavorToBuild, buildPath, isRN) {
   const apkName = getApkName(flavorToBuild);
-  console.log(apkName);
   execSync(`ls`, { encoding: "utf-8" });
   if (isRN === "true") {
     execSync(`ls`, { encoding: "utf-8" });
-    execSync(
-      `alias npm_or_yarn='ls yarn.lock &> /dev/null && echo yarn || echo npm'`,
-      { encoding: "utf-8" }
-    );
-    execSync(`$(npm_or_yarn) install`, { encoding: "utf-8" });
+    execSync(`ls yarn.lock &> /dev/null && yarn install || npm install`, {
+      encoding: "utf-8",
+    });
     execSync(`cd android`, { encoding: "utf-8" });
     execSync(`ls`, { encoding: "utf-8" });
   }
