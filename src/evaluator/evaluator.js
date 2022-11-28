@@ -1,8 +1,9 @@
 import { execSync } from "child_process";
-import { getApkName } from "../utils/utils";
+import { getApkName, getPascalCase } from "../utils/utils";
 
-export function getMasterBranchSize(flavorToBuild, buildPath, isRN) {
+export function getMasterBranchSize(fb, buildPath, isRN) {
   const apkName = getApkName(flavorToBuild);
+  const flavorToBuild = getPascalCase(fb);
   console.log(execSync(`ls`, { encoding: "utf-8" }));
   if (isRN === "true") {
     console.log(execSync(`ls`, { encoding: "utf-8" }));
@@ -11,12 +12,14 @@ export function getMasterBranchSize(flavorToBuild, buildPath, isRN) {
         encoding: "utf-8",
       })
     );
-    console.log(execSync(`cd android`, { encoding: "utf-8" }));
+    console.log(execSync(`cd android && ls`, { encoding: "utf-8" }));
     console.log(execSync(`ls`, { encoding: "utf-8" }));
   }
   console.log(execSync(`ls`, { encoding: "utf-8" }));
-  execSync(`./gradlew assemble${flavorToBuild}`, { encoding: "utf-8" });
-  const sizeOp = execSync(`cd ${buildPath} && du -k ${apkName}`, {
+  execSync(`cd android && ./gradlew assemble${flavorToBuild}`, {
+    encoding: "utf-8",
+  });
+  const sizeOp = execSync(`cd android/${buildPath} && du -k ${apkName}`, {
     encoding: "utf-8",
   });
 

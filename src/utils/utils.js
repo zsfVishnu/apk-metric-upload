@@ -8,8 +8,8 @@ export function getPascalCase(s) {
     return "Debug";
   }
 
-  if (s.toLowerCase().includes("debug")) {
-    const fl = s.split("debug")[0];
+  if (s.includes("Debug")) {
+    const fl = s.split("Debug")[0];
     return fl.charAt(0).toUpperCase() + fl.slice(1) + "Debug";
   }
   return 0;
