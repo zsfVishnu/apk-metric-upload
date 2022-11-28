@@ -17,10 +17,12 @@ export function getMasterBranchSize(flavorToBuild, buildPath, isRN) {
   }
   execSync(`ls`, { encoding: "utf-8" });
   execSync(`./gradlew assemble${flavorToBuild}`, { encoding: "utf-8" });
-  const apkSize = execSync(`cd ${buildPath} && du -k ${apkName}`, {
+  const sizeOp = execSync(`cd ${buildPath} && du -k ${apkName}`, {
     encoding: "utf-8",
-  })
-    .trim()
-    .split(/\s+/)[0];
+  });
+
+  const apkSize =
+    typeof sizeOp === `string` ? sizeOp.trim().split(/\s+/)[0] : 0;
+
   return apkSize;
 }

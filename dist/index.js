@@ -9511,11 +9511,13 @@ function getMasterBranchSize(flavorToBuild, buildPath, isRN) {
   }
   (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`ls`, { encoding: "utf-8" });
   (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`./gradlew assemble${flavorToBuild}`, { encoding: "utf-8" });
-  const apkSize = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd ${buildPath} && du -k ${apkName}`, {
+  const sizeOp = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd ${buildPath} && du -k ${apkName}`, {
     encoding: "utf-8",
-  })
-    .trim()
-    .split(/\s+/)[0];
+  });
+
+  const apkSize =
+    typeof sizeOp === `string` ? sizeOp.trim().split(/\s+/)[0] : 0;
+
   return apkSize;
 }
 
