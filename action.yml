@@ -1,13 +1,14 @@
-name: 'Apk metric upload'
-description: 'Uploads the app size metrics into your github as artifacts'
+name: "Apk metric upload"
+description: "Uploads the app size metrics into your github as artifacts"
 inputs:
-  flavor:  
-    description: 'debug flavor of the apk to build'
+  flavor:
+    description: "debug flavor of the apk to build"
     required: true
-    default: 'debug'
-  working-directory:  
-    description: 'working directory where the action should run'
+    default: "debug"
+  is-react-native:
+    description: "is it a react native project"
     required: false
+    default: false
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
+  using: "node16"
+  main: "dist/index.js"

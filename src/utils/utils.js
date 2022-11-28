@@ -1,14 +1,14 @@
 import { execSync } from "child_process";
 import fs from "fs";
+import { apkNameError, buildPathError } from "./error";
 
 export function getPascalCase(s) {
-  s = s.toLowerCase();
   s = s.trim();
-  if (s === "debug") {
+  if (s.toLowerCase() === "debug") {
     return "Debug";
   }
 
-  if (s.includes("debug")) {
+  if (s.toLowerCase().includes("debug")) {
     const fl = s.split("debug")[0];
     return fl.charAt(0).toUpperCase() + fl.slice(1) + "Debug";
   }
@@ -17,27 +17,35 @@ export function getPascalCase(s) {
 
 export function getBuildPath(s) {
   let outputPath = "app/build/outputs/apk/";
-  s = s.toLowerCase();
   s = s.trim();
-  if (s === "debug") {
+  if (s.toLowerCase() === "debug") {
     return outputPath + "debug/";
   }
 
-  if (s.includes("debug")) {
-    const fl = s.split("debug")[0];
+  if (s.includes("Debug")) {
+    const fl = s.split("Debug")[0];
     return outputPath + fl + "/debug/";
   }
-  return 0;
+  buildPathError();
+}
+
+export function getApkName(s) {
+  s = s.trim();
+  if (s.toLowerCase() === "debug") {
+    return "app-debug.apk";
+  }
+
+  if (s.includes("Debug")) {
+    const fl = s.split("Debug")[0];
+    return "app-" + fl + "-debug/";
+  }
+  apkNameError();
 }
 
 export async function writeMetricsToFile(s0) {
-  var dict = { "master size": s0 };
+  var dict = { master_size: s0 };
   var dstring = JSON.stringify(dict);
   fs.writeFile(`apk-metric.json`, dstring, function (err, result) {
     if (err) console.log("writing error", err);
   });
-}
-
-export function handleWorkingDir(dir) {
-  execSync(`cd ${dir}`);
 }

@@ -1,0 +1,24 @@
+import { execSync } from "child_process";
+import { getApkName } from "../utils/utils";
+
+export function getMasterBranchSize(flavorToBuild, buildPath, isRN) {
+  const apkName = getApkName();
+  if (isRN) {
+    execSync(`ls`, { encoding: "utf-8" });
+    execSync(
+      `alias npm_or_yarn='ls yarn.lock &> /dev/null && echo yarn || echo npm`,
+      { encoding: "utf-8" }
+    );
+    execSync(`$(npm_or_yarn) install`, { encoding: "utf-8" });
+    execSync(`cd android`, { encoding: "utf-8" });
+    execSync(`ls`, { encoding: "utf-8" });
+  }
+  execSync(`ls`, { encoding: "utf-8" });
+  execSync(`./gradlew assemble${flavorToBuild}`, { encoding: "utf-8" });
+  const apkSize = execSync(`cd ${buildPath} && du -k ${apkName}`, {
+    encoding: "utf-8",
+  })
+    .trim()
+    .split(/\s+/)[0];
+  return apkSize;
+}
