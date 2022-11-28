@@ -3,6 +3,7 @@ import { getApkName } from "../utils/utils";
 
 export function getMasterBranchSize(flavorToBuild, buildPath, isRN) {
   const apkName = getApkName();
+  execSync(`ls`, { encoding: "utf-8" });
   if (isRN) {
     execSync(`ls`, { encoding: "utf-8" });
     execSync(
