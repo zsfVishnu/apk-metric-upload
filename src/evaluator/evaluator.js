@@ -10,13 +10,18 @@ export function getMasterBranchSize(fb, buildPath, isRN) {
 }
 
 function getRNMasterSize(apkName, flavorToBuild, buildPath) {
-  execSync(`cd android && ./gradlew assemble${flavorToBuild}`, {
-    encoding: "utf-8",
-  });
+  console.log(
+    execSync(`cd android && ./gradlew assemble${flavorToBuild}`, {
+      encoding: "utf-8",
+    })
+  );
 
   const sizeOp = execSync(`cd android/${buildPath} && du -k ${apkName}`, {
     encoding: "utf-8",
   });
+
+  console.log(sizeOp);
+  console.log(sizeOp);
 
   const apkSize =
     typeof sizeOp === `string` ? sizeOp.trim().split(/\s+/)[0] : 0;

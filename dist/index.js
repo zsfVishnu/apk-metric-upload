@@ -9504,13 +9504,18 @@ function getMasterBranchSize(fb, buildPath, isRN) {
 }
 
 function getRNMasterSize(apkName, flavorToBuild, buildPath) {
-  (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd android && ./gradlew assemble${flavorToBuild}`, {
-    encoding: "utf-8",
-  });
+  console.log(
+    (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd android && ./gradlew assemble${flavorToBuild}`, {
+      encoding: "utf-8",
+    })
+  );
 
   const sizeOp = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd android/${buildPath} && du -k ${apkName}`, {
     encoding: "utf-8",
   });
+
+  console.log(sizeOp);
+  console.log(sizeOp);
 
   const apkSize =
     typeof sizeOp === `string` ? sizeOp.trim().split(/\s+/)[0] : 0;
