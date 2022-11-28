@@ -9496,7 +9496,7 @@ function wrappy (fn, cb) {
 
 
 function getMasterBranchSize(flavorToBuild, buildPath, isRN) {
-  const apkName = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_1__/* .getApkName */ .sJ)();
+  const apkName = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_1__/* .getApkName */ .sJ)(flavorToBuild);
   console.log(apkName);
   (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`ls`, { encoding: "utf-8" });
   if (isRN === "true") {
