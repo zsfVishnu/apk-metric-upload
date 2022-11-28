@@ -10,10 +10,6 @@ export function getMasterBranchSize(fb, buildPath, isRN) {
 }
 
 function getRNMasterSize(apkName, flavorToBuild, buildPath) {
-  execSync(`ls yarn.lock &> /dev/null && yarn install || npm install`, {
-    encoding: "utf-8",
-  });
-
   execSync(`cd android && ./gradlew assemble${flavorToBuild}`, {
     encoding: "utf-8",
   });
@@ -30,7 +26,7 @@ function getRNMasterSize(apkName, flavorToBuild, buildPath) {
 
 function getNativeMasterSize(apkName, flavorToBuild, buildPath) {
   execSync(`./gradlew assemble${flavorToBuild}`, { encoding: "utf-8" });
-  const sizeOp = execSync(`cd ${buildPath} && du -k app-${apkSuffix}.apk`, {
+  const sizeOp = execSync(`cd ${buildPath} && du -k app-${apkName}`, {
     encoding: "utf-8",
   });
   const apkSize =

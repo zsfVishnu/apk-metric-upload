@@ -9504,10 +9504,6 @@ function getMasterBranchSize(fb, buildPath, isRN) {
 }
 
 function getRNMasterSize(apkName, flavorToBuild, buildPath) {
-  (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`ls yarn.lock &> /dev/null && yarn install || npm install`, {
-    encoding: "utf-8",
-  });
-
   (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd android && ./gradlew assemble${flavorToBuild}`, {
     encoding: "utf-8",
   });
@@ -9524,7 +9520,7 @@ function getRNMasterSize(apkName, flavorToBuild, buildPath) {
 
 function getNativeMasterSize(apkName, flavorToBuild, buildPath) {
   (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`./gradlew assemble${flavorToBuild}`, { encoding: "utf-8" });
-  const sizeOp = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd ${buildPath} && du -k app-${apkSuffix}.apk`, {
+  const sizeOp = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd ${buildPath} && du -k app-${apkName}`, {
     encoding: "utf-8",
   });
   const apkSize =
@@ -9662,7 +9658,7 @@ function getApkName(s) {
 
   if (s.includes("Debug")) {
     const fl = s.split("Debug")[0];
-    return "app-" + fl + "-debug/";
+    return "app-" + fl + "-debug.apk";
   }
   apkNameError();
 }

@@ -37,7 +37,7 @@ export function getApkName(s) {
 
   if (s.includes("Debug")) {
     const fl = s.split("Debug")[0];
-    return "app-" + fl + "-debug/";
+    return "app-" + fl + "-debug.apk";
   }
   apkNameError();
 }
