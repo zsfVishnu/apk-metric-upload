@@ -9498,7 +9498,7 @@ function wrappy (fn, cb) {
 function getMasterBranchSize(fb, buildPath, isRN) {
   const apkName = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_1__/* .getApkName */ .sJ)(fb);
   const flavorToBuild = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_1__/* .getPascalCase */ .RJ)(fb);
-  return isRN
+  return isRN === "true"
     ? getRNMasterSize(apkName, flavorToBuild, buildPath)
     : getNativeMasterSize(apkName, flavorToBuild, buildPath);
 }

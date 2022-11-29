@@ -4,7 +4,7 @@ import { getApkName, getPascalCase } from "../utils/utils";
 export function getMasterBranchSize(fb, buildPath, isRN) {
   const apkName = getApkName(fb);
   const flavorToBuild = getPascalCase(fb);
-  return isRN
+  return isRN === "true"
     ? getRNMasterSize(apkName, flavorToBuild, buildPath)
     : getNativeMasterSize(apkName, flavorToBuild, buildPath);
 }
