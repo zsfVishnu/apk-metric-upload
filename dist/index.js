@@ -9525,7 +9525,7 @@ function getRNMasterSize(apkName, flavorToBuild, buildPath) {
 
 function getNativeMasterSize(apkName, flavorToBuild, buildPath) {
   (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`./gradlew assemble${flavorToBuild}`, { encoding: "utf-8" });
-  const sizeOp = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd ${buildPath} && du -k app-${apkName}`, {
+  const sizeOp = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd ${buildPath} && du -k ${apkName}`, {
     encoding: "utf-8",
   });
   const apkSize =

@@ -31,7 +31,7 @@ function getRNMasterSize(apkName, flavorToBuild, buildPath) {
 
 function getNativeMasterSize(apkName, flavorToBuild, buildPath) {
   execSync(`./gradlew assemble${flavorToBuild}`, { encoding: "utf-8" });
-  const sizeOp = execSync(`cd ${buildPath} && du -k app-${apkName}`, {
+  const sizeOp = execSync(`cd ${buildPath} && du -k ${apkName}`, {
     encoding: "utf-8",
   });
   const apkSize =
