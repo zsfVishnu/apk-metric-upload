@@ -1,91 +1,6 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 4074:
-/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
-
-"use strict";
-/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   "B": () => (/* binding */ getMasterBranchSize)
-/* harmony export */ });
-/* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2081);
-/* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(child_process__WEBPACK_IMPORTED_MODULE_0__);
-
-
-function getMasterBranchSize(flavorToBuild, buildPath) {
-    const apkSuffix = flavorToBuild.toLowerCase()
-    ;(0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`./gradlew assemble${flavorToBuild}`, { encoding: 'utf-8' }); //handle flavor casing
-    const apkSize = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd ${buildPath} && du -k app-${apkSuffix}.apk`, { encoding: 'utf-8' }).trim().split(/\s+/)[0];
-    return apkSize
-}
-
-/***/ }),
-
-/***/ 6238:
-/***/ ((module, __webpack_exports__, __nccwpck_require__) => {
-
-"use strict";
-__nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__) => {
-__nccwpck_require__.r(__webpack_exports__);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(6024);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _evaluator__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(4074);
-/* harmony import */ var _network__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(513);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(759);
-
-
-
-
-
-try {
-  const flavorToBuild = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("flavor");
-  const dir = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("working-directory");
-  (0,_utils__WEBPACK_IMPORTED_MODULE_3__/* .handleWorkingDir */ .Zc)(dir);
-  const pascalFlavour = (0,_utils__WEBPACK_IMPORTED_MODULE_3__/* .getPascalCase */ .RJ)(flavorToBuild);
-  if (pascalFlavour === 0) {
-    let err = new Error("Error with building flavor");
-    err.description =
-      "Only debug flavors are allowed. Please check flavor guidelines";
-    throw err;
-  }
-
-  const bp = (0,_utils__WEBPACK_IMPORTED_MODULE_3__/* .getBuildPath */ .HF)(flavorToBuild);
-  console.log(`Building flavor:  ${flavorToBuild}!`);
-  const s0 = (0,_evaluator__WEBPACK_IMPORTED_MODULE_1__/* .getMasterBranchSize */ .B)(pascalFlavour, bp);
-  await (0,_utils__WEBPACK_IMPORTED_MODULE_3__/* .writeMetricsToFile */ .HN)(s0);
-  (0,_network__WEBPACK_IMPORTED_MODULE_2__/* .uploadArtifact */ .x)();
-} catch (error) {
-  (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(error.message);
-}
-
-__webpack_handle_async_dependencies__();
-}, 1);
-
-/***/ }),
-
-/***/ 513:
-/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
-
-"use strict";
-/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   "x": () => (/* binding */ uploadArtifact)
-/* harmony export */ });
-const artifact = __nccwpck_require__(6954);
-
-function uploadArtifact(s0) {
-  const artifactClient = artifact.create();
-  const artifactName = "apk-metric-artifact";
-  const files = [`apk-metric.json`];
-  const rootDirectory = `.`;
-  const options = {
-    continueOnError: false,
-  };
-  artifactClient.uploadArtifact(artifactName, files, rootDirectory, options);
-}
-
-
-/***/ }),
-
 /***/ 6954:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -720,7 +635,7 @@ const zlib = __importStar(__nccwpck_require__(9796));
 const utils_1 = __nccwpck_require__(5218);
 const url_1 = __nccwpck_require__(7310);
 const status_reporter_1 = __nccwpck_require__(6631);
-const perf_hooks_1 = __nccwpck_require__(8623);
+const perf_hooks_1 = __nccwpck_require__(4074);
 const http_manager_1 = __nccwpck_require__(3958);
 const config_variables_1 = __nccwpck_require__(3780);
 const requestUtils_1 = __nccwpck_require__(2924);
@@ -1490,7 +1405,7 @@ const utils_1 = __nccwpck_require__(5218);
 const config_variables_1 = __nccwpck_require__(3780);
 const util_1 = __nccwpck_require__(3837);
 const url_1 = __nccwpck_require__(7310);
-const perf_hooks_1 = __nccwpck_require__(8623);
+const perf_hooks_1 = __nccwpck_require__(4074);
 const status_reporter_1 = __nccwpck_require__(6631);
 const http_client_1 = __nccwpck_require__(2745);
 const http_manager_1 = __nccwpck_require__(3958);
@@ -9567,32 +9482,160 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 759:
+/***/ 6159:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   "RJ": () => (/* binding */ getPascalCase),
-/* harmony export */   "HF": () => (/* binding */ getBuildPath),
-/* harmony export */   "HN": () => (/* binding */ writeMetricsToFile),
-/* harmony export */   "Zc": () => (/* binding */ handleWorkingDir)
+/* harmony export */   "B": () => (/* binding */ getMasterBranchSize)
 /* harmony export */ });
 /* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2081);
 /* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(child_process__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(7147);
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(fs__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utils_utils__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(5976);
+
+
+
+function getMasterBranchSize(fb, buildPath, isRN) {
+  const apkName = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_1__/* .getApkName */ .sJ)(fb);
+  const flavorToBuild = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_1__/* .getPascalCase */ .RJ)(fb);
+  return isRN === "true"
+    ? getRNMasterSize(apkName, flavorToBuild, buildPath)
+    : getNativeMasterSize(apkName, flavorToBuild, buildPath);
+}
+
+function getRNMasterSize(apkName, flavorToBuild, buildPath) {
+  console.log(
+    (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd android && ./gradlew assemble${flavorToBuild}`, {
+      encoding: "utf-8",
+    })
+  );
+
+  const sizeOp = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd android/${buildPath} && du -k ${apkName}`, {
+    encoding: "utf-8",
+  });
+
+  console.log(sizeOp);
+  console.log(sizeOp);
+
+  const apkSize =
+    typeof sizeOp === `string` ? sizeOp.trim().split(/\s+/)[0] : 0;
+
+  return apkSize;
+}
+
+function getNativeMasterSize(apkName, flavorToBuild, buildPath) {
+  (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`./gradlew assemble${flavorToBuild}`, { encoding: "utf-8" });
+  const sizeOp = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd ${buildPath} && du -k ${apkName}`, {
+    encoding: "utf-8",
+  });
+  const apkSize =
+    typeof sizeOp === `string` ? sizeOp.trim().split(/\s+/)[0] : 0;
+  return apkSize;
+}
+
+
+/***/ }),
+
+/***/ 168:
+/***/ ((module, __webpack_exports__, __nccwpck_require__) => {
+
+"use strict";
+__nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__) => {
+__nccwpck_require__.r(__webpack_exports__);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(6024);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _evaluator_evaluator__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(6159);
+/* harmony import */ var _network__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(9137);
+/* harmony import */ var _utils_utils__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(5976);
+
+
+
+
+
+try {
+  const flavorToBuild = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("flavor");
+  const isRN = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("is-react-native");
+  const bp = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_3__/* .getBuildPath */ .HF)(flavorToBuild);
+  console.log(`Building flavor:  ${flavorToBuild}!`);
+  const s0 = (0,_evaluator_evaluator__WEBPACK_IMPORTED_MODULE_1__/* .getMasterBranchSize */ .B)(flavorToBuild, bp, isRN);
+  await (0,_utils_utils__WEBPACK_IMPORTED_MODULE_3__/* .writeMetricsToFile */ .HN)(s0);
+  (0,_network__WEBPACK_IMPORTED_MODULE_2__/* .uploadArtifact */ .x)();
+} catch (error) {
+  (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(error.message);
+}
+
+__webpack_handle_async_dependencies__();
+}, 1);
+
+/***/ }),
+
+/***/ 9137:
+/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
+
+"use strict";
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "x": () => (/* binding */ uploadArtifact)
+/* harmony export */ });
+const artifact = __nccwpck_require__(6954);
+
+function uploadArtifact(s0) {
+  const artifactClient = artifact.create();
+  const artifactName = "apk-metric-artifact";
+  const files = [`apk-metric.json`];
+  const rootDirectory = `.`;
+  const options = {
+    continueOnError: false,
+  };
+  artifactClient.uploadArtifact(artifactName, files, rootDirectory, options);
+}
+
+
+/***/ }),
+
+/***/ 5976:
+/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
+
+"use strict";
+
+// EXPORTS
+__nccwpck_require__.d(__webpack_exports__, {
+  "sJ": () => (/* binding */ getApkName),
+  "HF": () => (/* binding */ getBuildPath),
+  "RJ": () => (/* binding */ getPascalCase),
+  "HN": () => (/* binding */ writeMetricsToFile)
+});
+
+// EXTERNAL MODULE: external "child_process"
+var external_child_process_ = __nccwpck_require__(2081);
+// EXTERNAL MODULE: external "fs"
+var external_fs_ = __nccwpck_require__(7147);
+var external_fs_default = /*#__PURE__*/__nccwpck_require__.n(external_fs_);
+// EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
+var core = __nccwpck_require__(6024);
+;// CONCATENATED MODULE: ./src/utils/error.js
+
+
+function buildPathError() {
+  (0,core.setFailed)("Build Path error. Make sure the flavor provided is correct");
+}
+
+function apkNameError() {
+  (0,core.setFailed)("Apk name error. Make sure the flavor provided is correct");
+}
+
+;// CONCATENATED MODULE: ./src/utils/utils.js
+
 
 
 
 function getPascalCase(s) {
-  s = s.toLowerCase();
   s = s.trim();
-  if (s === "debug") {
+  if (s.toLowerCase() === "debug") {
     return "Debug";
   }
 
-  if (s.includes("debug")) {
-    const fl = s.split("debug")[0];
+  if (s.includes("Debug")) {
+    const fl = s.split("Debug")[0];
     return fl.charAt(0).toUpperCase() + fl.slice(1) + "Debug";
   }
   return 0;
@@ -9600,29 +9643,37 @@ function getPascalCase(s) {
 
 function getBuildPath(s) {
   let outputPath = "app/build/outputs/apk/";
-  s = s.toLowerCase();
   s = s.trim();
-  if (s === "debug") {
+  if (s.toLowerCase() === "debug") {
     return outputPath + "debug/";
   }
 
-  if (s.includes("debug")) {
-    const fl = s.split("debug")[0];
+  if (s.includes("Debug")) {
+    const fl = s.split("Debug")[0];
     return outputPath + fl + "/debug/";
   }
-  return 0;
+  buildPathError();
+}
+
+function getApkName(s) {
+  s = s.trim();
+  if (s.toLowerCase() === "debug") {
+    return "app-debug.apk";
+  }
+
+  if (s.includes("Debug")) {
+    const fl = s.split("Debug")[0];
+    return "app-" + fl + "-debug.apk";
+  }
+  apkNameError();
 }
 
 async function writeMetricsToFile(s0) {
-  var dict = { "master size": s0 };
+  var dict = { master_size: s0 };
   var dstring = JSON.stringify(dict);
-  fs__WEBPACK_IMPORTED_MODULE_1___default().writeFile(`apk-metric.json`, dstring, function (err, result) {
+  external_fs_default().writeFile(`apk-metric.json`, dstring, function (err, result) {
     if (err) console.log("writing error", err);
   });
-}
-
-function handleWorkingDir(dir) {
-  (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd ${dir}`);
 }
 
 
@@ -9708,7 +9759,7 @@ module.exports = require("path");
 
 /***/ }),
 
-/***/ 8623:
+/***/ 4074:
 /***/ ((module) => {
 
 "use strict";
@@ -9912,7 +9963,7 @@ module.exports = require("zlib");
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module used 'module' so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(6238);
+/******/ 	var __webpack_exports__ = __nccwpck_require__(168);
 /******/ 	module.exports = __webpack_exports__;
 /******/ 	
 /******/ })()
