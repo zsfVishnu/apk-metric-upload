@@ -4,6 +4,9 @@
 This action uploads your debug app metrics to a workflow artifact which can be used by our [app-size-tracker](https://github.com/zsfVishnu/apk-size-tracker) action to help you track your app metrics like size, build time etc
 
 # Usage
+The action can be used to track both native and react native app sizes. Given below are examples of how to use the app for the two platforms.
+
+## Native
 
 ```
 on:
@@ -18,6 +21,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -27,12 +31,46 @@ jobs:
         id: apkSize
         uses: zsfVishnu/apk-metric-upload@v1.0.0
         with:
-          flavor: 'debug'
+          flavor: debug
+          
+```
+
+## React Native
+
+```
+on:
+  push:
+      branches:
+        - master
+
+jobs:
+  ApkSizeTracker:
+    runs-on: ubuntu-latest
+    name: Apk size tracker
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          
+      - name: Install dependencies
+        run: yarn install
+          
+      - name: Upload action step
+        id: apkSize
+        uses: zsfVishnu/apk-metric-upload@v1.0.0
+        with:
+          flavor: debug
+          is-react-native: true
           
 ```
 
 # Inputs
-The action only needs the debug flavor name to upload your metrics.
+For your native project, this action only needs the debug flavor name to upload your metrics. For a react native project, you have to provide an additional
+flag `is-react-native` to let the action know that it is an RN project.
 
 ## flavor
 This specifies which debug flavor of your app would you like to track. The action only creates debug builds since release builds might require keys and/or confidential information.
