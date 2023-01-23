@@ -9671,7 +9671,7 @@ function getApkName(s) {
 async function writeMetricsToFile(s0) {
   var dict = { master_size: s0 };
   var dstring = JSON.stringify(dict);
-  external_fs_default().writeFile(`apk-metric.json`, dstring, function (err, result) {
+  external_fs_default().writeFileSync(`apk-metric.json`, dstring, function (err, result) {
     if (err) console.log("writing error", err);
   });
 }
