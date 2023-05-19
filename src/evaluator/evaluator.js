@@ -38,3 +38,14 @@ function getNativeMasterSize(apkName, flavorToBuild, buildPath) {
     typeof sizeOp === `string` ? sizeOp.trim().split(/\s+/)[0] : 0;
   return apkSize;
 }
+
+export function getRNBundleMasterSize(flavorToBuild, bundlePath) {
+  const bundleName = "index.android.bundle"
+  execSync(`yarn bundle:${flavorToBuild}:android`, { encoding: "utf-8" });
+  const sizeOp = execSync(`cd ${bundlePath} && du -k ${bundleName}`, {
+    encoding: "utf-8",
+  });
+  const bundleSize =
+      typeof sizeOp === `string` ? sizeOp.trim().split(/\s+/)[0] : 0;
+  return bundleSize;
+}

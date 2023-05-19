@@ -1,15 +1,18 @@
 import { getInput, setFailed } from "@actions/core";
-import { getMasterBranchSize } from "./evaluator/evaluator";
+import {getMasterBranchSize, getRNBundleMasterSize} from "./evaluator/evaluator";
 import { uploadArtifact } from "./network";
-import { getBuildPath, getPascalCase, writeMetricsToFile } from "./utils/utils";
+import {getBuildPath, getPascalCase, writeApkMetricsToFile, writeBunleMetricsToFile} from "./utils/utils";
 
 try {
   const flavorToBuild = getInput("flavor");
   const isRN = getInput("is-react-native");
   const bp = getBuildPath(flavorToBuild);
+  const bundlePath = "android/infra/react/src/main/assets/"
   console.log(`Building flavor:  ${flavorToBuild}!`);
   const s0 = getMasterBranchSize(flavorToBuild, bp, isRN);
-  await writeMetricsToFile(s0);
+  const s1 = getRNBundleMasterSize(flavorToBuild, bundlePath)
+  await writeApkMetricsToFile(s0);
+  await writeBunleMetricsToFile(s1)
   uploadArtifact();
 } catch (error) {
   setFailed(error.message);
