@@ -42,6 +42,28 @@ export function getApkName(s) {
   apkNameError();
 }
 
+export function getBundleFlavor(buildFlavor) {
+  buildFlavor = buildFlavor.trim()
+  if (buildFlavor.toLowerCase() === "debug") {
+    return "debug"
+  }
+
+  if (buildFlavor.toLowerCase() === "release") {
+    return "release"
+  }
+
+  if (s.includes("Debug")) {
+    const fl = buildFlavor.split("Debug")[0];
+    return "debug"
+  }
+
+  if (s.includes("Release")) {
+    const fl = buildFlavor.split("Release")[0];
+    return "release"
+  }
+  return 0;
+}
+
 export async function writeApkMetricsToFile(s0) {
   var dict = { master_size: s0 };
   var dstring = JSON.stringify(dict);
