@@ -1,4 +1,4 @@
-/******/ (() => { // webpackBootstrap
+require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 6954:
@@ -9487,7 +9487,8 @@ function wrappy (fn, cb) {
 
 "use strict";
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   "B": () => (/* binding */ getMasterBranchSize)
+/* harmony export */   "B": () => (/* binding */ getMasterBranchSize),
+/* harmony export */   "t": () => (/* binding */ getRNBundleMasterSize)
 /* harmony export */ });
 /* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2081);
 /* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(child_process__WEBPACK_IMPORTED_MODULE_0__);
@@ -9533,6 +9534,19 @@ function getNativeMasterSize(apkName, flavorToBuild, buildPath) {
   return apkSize;
 }
 
+function getRNBundleMasterSize(flavorToBuild, bundlePath) {
+  console.log("inside get bundle size method")
+  const bundleName = "index.android.bundle"
+  const bundleFlavor = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_1__/* .getBundleFlavor */ .e4)(flavorToBuild)
+  ;(0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`yarn bundle:${bundleFlavor}:android`, { encoding: "utf-8" });
+  const sizeOp = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd ${bundlePath} && du -k ${bundleName}`, {
+    encoding: "utf-8",
+  });
+  console.log(sizeOp);
+  const bundleSize = typeof sizeOp === `string` ? sizeOp.trim().split(/\s+/)[0] : 0;
+  return bundleSize;
+}
+
 
 /***/ }),
 
@@ -9540,7 +9554,7 @@ function getNativeMasterSize(apkName, flavorToBuild, buildPath) {
 /***/ ((module, __webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
-__nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__) => {
+__nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 __nccwpck_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(6024);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
@@ -9556,16 +9570,20 @@ try {
   const flavorToBuild = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("flavor");
   const isRN = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("is-react-native");
   const bp = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_3__/* .getBuildPath */ .HF)(flavorToBuild);
+  const bundlePath = "android/infra/react/src/main/assets/"
   console.log(`Building flavor:  ${flavorToBuild}!`);
   const s0 = (0,_evaluator_evaluator__WEBPACK_IMPORTED_MODULE_1__/* .getMasterBranchSize */ .B)(flavorToBuild, bp, isRN);
-  await (0,_utils_utils__WEBPACK_IMPORTED_MODULE_3__/* .writeMetricsToFile */ .HN)(s0);
-  (0,_network__WEBPACK_IMPORTED_MODULE_2__/* .uploadArtifact */ .x)();
+  const s1 = (0,_evaluator_evaluator__WEBPACK_IMPORTED_MODULE_1__/* .getRNBundleMasterSize */ .t)(flavorToBuild, bundlePath)
+  console.log("bundle size", s1)
+  await (0,_utils_utils__WEBPACK_IMPORTED_MODULE_3__/* .writeApkMetricsToFile */ .zu)(s0);
+  await (0,_utils_utils__WEBPACK_IMPORTED_MODULE_3__/* .writeBunleMetricsToFile */ .Am)(s1)
+  ;(0,_network__WEBPACK_IMPORTED_MODULE_2__/* .uploadArtifact */ .x)();
 } catch (error) {
   (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(error.message);
 }
 
-__webpack_handle_async_dependencies__();
-}, 1);
+__webpack_async_result__();
+} catch(e) { __webpack_async_result__(e); } }, 1);
 
 /***/ }),
 
@@ -9580,15 +9598,14 @@ const artifact = __nccwpck_require__(6954);
 
 function uploadArtifact(s0) {
   const artifactClient = artifact.create();
-  const artifactName = "apk-metric-artifact";
-  const files = [`apk-metric.json`];
+  const artifactName = "metric-artifact";
+  const files = [`apk-metric.json`, `bundle-metric.json`];
   const rootDirectory = `.`;
   const options = {
     continueOnError: false,
   };
   artifactClient.uploadArtifact(artifactName, files, rootDirectory, options);
 }
-
 
 /***/ }),
 
@@ -9601,8 +9618,10 @@ function uploadArtifact(s0) {
 __nccwpck_require__.d(__webpack_exports__, {
   "sJ": () => (/* binding */ getApkName),
   "HF": () => (/* binding */ getBuildPath),
+  "e4": () => (/* binding */ getBundleFlavor),
   "RJ": () => (/* binding */ getPascalCase),
-  "HN": () => (/* binding */ writeMetricsToFile)
+  "zu": () => (/* binding */ writeApkMetricsToFile),
+  "Am": () => (/* binding */ writeBunleMetricsToFile)
 });
 
 // EXTERNAL MODULE: external "child_process"
@@ -9668,10 +9687,40 @@ function getApkName(s) {
   apkNameError();
 }
 
-async function writeMetricsToFile(s0) {
+function getBundleFlavor(buildFlavor) {
+  buildFlavor = buildFlavor.trim()
+  if (buildFlavor.toLowerCase() === "debug") {
+    return "debug"
+  }
+
+  if (buildFlavor.toLowerCase() === "release") {
+    return "release"
+  }
+
+  if (s.includes("Debug")) {
+    const fl = buildFlavor.split("Debug")[0];
+    return "debug"
+  }
+
+  if (s.includes("Release")) {
+    const fl = buildFlavor.split("Release")[0];
+    return "release"
+  }
+  return 0;
+}
+
+async function writeApkMetricsToFile(s0) {
   var dict = { master_size: s0 };
   var dstring = JSON.stringify(dict);
   external_fs_default().writeFileSync(`apk-metric.json`, dstring, function (err, result) {
+    if (err) console.log("writing error", err);
+  });
+}
+
+async function writeBunleMetricsToFile(bundleSize) {
+  var dict = { master_size: bundleSize };
+  var dstring = JSON.stringify(dict);
+  external_fs_default().writeFileSync(`bundle-metric.json`, dstring, function (err, result) {
     if (err) console.log("writing error", err);
   });
 }
@@ -9842,75 +9891,70 @@ module.exports = require("zlib");
 /************************************************************************/
 /******/ 	/* webpack/runtime/async module */
 /******/ 	(() => {
-/******/ 		var webpackThen = typeof Symbol === "function" ? Symbol("webpack then") : "__webpack_then__";
+/******/ 		var webpackQueues = typeof Symbol === "function" ? Symbol("webpack queues") : "__webpack_queues__";
 /******/ 		var webpackExports = typeof Symbol === "function" ? Symbol("webpack exports") : "__webpack_exports__";
-/******/ 		var completeQueue = (queue) => {
-/******/ 			if(queue) {
+/******/ 		var webpackError = typeof Symbol === "function" ? Symbol("webpack error") : "__webpack_error__";
+/******/ 		var resolveQueue = (queue) => {
+/******/ 			if(queue && !queue.d) {
+/******/ 				queue.d = 1;
 /******/ 				queue.forEach((fn) => (fn.r--));
 /******/ 				queue.forEach((fn) => (fn.r-- ? fn.r++ : fn()));
 /******/ 			}
 /******/ 		}
-/******/ 		var completeFunction = (fn) => (!--fn.r && fn());
-/******/ 		var queueFunction = (queue, fn) => (queue ? queue.push(fn) : completeFunction(fn));
 /******/ 		var wrapDeps = (deps) => (deps.map((dep) => {
 /******/ 			if(dep !== null && typeof dep === "object") {
-/******/ 				if(dep[webpackThen]) return dep;
+/******/ 				if(dep[webpackQueues]) return dep;
 /******/ 				if(dep.then) {
 /******/ 					var queue = [];
+/******/ 					queue.d = 0;
 /******/ 					dep.then((r) => {
 /******/ 						obj[webpackExports] = r;
-/******/ 						completeQueue(queue);
-/******/ 						queue = 0;
+/******/ 						resolveQueue(queue);
+/******/ 					}, (e) => {
+/******/ 						obj[webpackError] = e;
+/******/ 						resolveQueue(queue);
 /******/ 					});
 /******/ 					var obj = {};
-/******/ 												obj[webpackThen] = (fn, reject) => (queueFunction(queue, fn), dep['catch'](reject));
+/******/ 					obj[webpackQueues] = (fn) => (fn(queue));
 /******/ 					return obj;
 /******/ 				}
 /******/ 			}
 /******/ 			var ret = {};
-/******/ 								ret[webpackThen] = (fn) => (completeFunction(fn));
-/******/ 								ret[webpackExports] = dep;
-/******/ 								return ret;
+/******/ 			ret[webpackQueues] = x => {};
+/******/ 			ret[webpackExports] = dep;
+/******/ 			return ret;
 /******/ 		}));
 /******/ 		__nccwpck_require__.a = (module, body, hasAwait) => {
-/******/ 			var queue = hasAwait && [];
+/******/ 			var queue;
+/******/ 			hasAwait && ((queue = []).d = 1);
+/******/ 			var depQueues = new Set();
 /******/ 			var exports = module.exports;
 /******/ 			var currentDeps;
 /******/ 			var outerResolve;
 /******/ 			var reject;
-/******/ 			var isEvaluating = true;
-/******/ 			var nested = false;
-/******/ 			var whenAll = (deps, onResolve, onReject) => {
-/******/ 				if (nested) return;
-/******/ 				nested = true;
-/******/ 				onResolve.r += deps.length;
-/******/ 				deps.map((dep, i) => (dep[webpackThen](onResolve, onReject)));
-/******/ 				nested = false;
-/******/ 			};
 /******/ 			var promise = new Promise((resolve, rej) => {
 /******/ 				reject = rej;
-/******/ 				outerResolve = () => (resolve(exports), completeQueue(queue), queue = 0);
+/******/ 				outerResolve = resolve;
 /******/ 			});
 /******/ 			promise[webpackExports] = exports;
-/******/ 			promise[webpackThen] = (fn, rejectFn) => {
-/******/ 				if (isEvaluating) { return completeFunction(fn); }
-/******/ 				if (currentDeps) whenAll(currentDeps, fn, rejectFn);
-/******/ 				queueFunction(queue, fn);
-/******/ 				promise['catch'](rejectFn);
-/******/ 			};
+/******/ 			promise[webpackQueues] = (fn) => (queue && fn(queue), depQueues.forEach(fn), promise["catch"](x => {}));
 /******/ 			module.exports = promise;
 /******/ 			body((deps) => {
-/******/ 				if(!deps) return outerResolve();
 /******/ 				currentDeps = wrapDeps(deps);
-/******/ 				var fn, result;
-/******/ 				var promise = new Promise((resolve, reject) => {
-/******/ 					fn = () => (resolve(result = currentDeps.map((d) => (d[webpackExports]))));
+/******/ 				var fn;
+/******/ 				var getResult = () => (currentDeps.map((d) => {
+/******/ 					if(d[webpackError]) throw d[webpackError];
+/******/ 					return d[webpackExports];
+/******/ 				}))
+/******/ 				var promise = new Promise((resolve) => {
+/******/ 					fn = () => (resolve(getResult));
 /******/ 					fn.r = 0;
-/******/ 					whenAll(currentDeps, fn, reject);
+/******/ 					var fnQueue = (q) => (q !== queue && !depQueues.has(q) && (depQueues.add(q), q && !q.d && (fn.r++, q.push(fn))));
+/******/ 					currentDeps.map((dep) => (dep[webpackQueues](fnQueue)));
 /******/ 				});
-/******/ 				return fn.r ? promise : result;
-/******/ 			}).then(outerResolve, reject);
-/******/ 			isEvaluating = false;
+/******/ 				return fn.r ? promise : getResult();
+/******/ 			}, (err) => ((err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue)));
+/******/ 			queue && (queue.d = 0);
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -9968,3 +10012,4 @@ module.exports = require("zlib");
 /******/ 	
 /******/ })()
 ;
+//# sourceMappingURL=index.js.map
