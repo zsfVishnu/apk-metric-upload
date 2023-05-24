@@ -40,6 +40,7 @@ function getNativeMasterSize(apkName, flavorToBuild, buildPath) {
 }
 
 export function getRNBundleMasterSize(flavorToBuild, bundlePath) {
+  console.log("inside get bundle size method")
   const bundleName = "index.android.bundle"
   const bundleFlavor = getBundleFlavor(flavorToBuild)
   execSync(`yarn bundle:${bundleFlavor}:android`, { encoding: "utf-8" });

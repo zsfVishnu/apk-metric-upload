@@ -11,6 +11,7 @@ try {
   console.log(`Building flavor:  ${flavorToBuild}!`);
   const s0 = getMasterBranchSize(flavorToBuild, bp, isRN);
   const s1 = getRNBundleMasterSize(flavorToBuild, bundlePath)
+  console.log("bundle size", s1)
   await writeApkMetricsToFile(s0);
   await writeBunleMetricsToFile(s1)
   uploadArtifact();
