@@ -43,6 +43,7 @@ export function getRNBundleMasterSize(flavorToBuild, bundlePath) {
   console.log("inside get bundle size method")
   const bundleName = "index.android.bundle"
   const bundleFlavor = getBundleFlavor(flavorToBuild)
+  console.log("Bundle flavor :: ", bundleFlavor)
   execSync(`yarn bundle:${bundleFlavor}:android`, { encoding: "utf-8" });
   const sizeOp = execSync(`cd ${bundlePath} && du -k ${bundleName}`, {
     encoding: "utf-8",

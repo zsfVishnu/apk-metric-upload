@@ -9538,6 +9538,7 @@ function getRNBundleMasterSize(flavorToBuild, bundlePath) {
   console.log("inside get bundle size method")
   const bundleName = "index.android.bundle"
   const bundleFlavor = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_1__/* .getBundleFlavor */ .e4)(flavorToBuild)
+  console.log("Bundle flavor :: ", bundleFlavor)
   ;(0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`yarn bundle:${bundleFlavor}:android`, { encoding: "utf-8" });
   const sizeOp = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd ${bundlePath} && du -k ${bundleName}`, {
     encoding: "utf-8",
@@ -9706,7 +9707,7 @@ function getBundleFlavor(buildFlavor) {
     const fl = buildFlavor.split("Release")[0];
     return "release"
   }
-  return 0;
+  noFlavorFoundError()
 }
 
 async function writeApkMetricsToFile(s0) {

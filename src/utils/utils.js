@@ -61,7 +61,7 @@ export function getBundleFlavor(buildFlavor) {
     const fl = buildFlavor.split("Release")[0];
     return "release"
   }
-  return 0;
+  noFlavorFoundError()
 }
 
 export async function writeApkMetricsToFile(s0) {
