@@ -9534,12 +9534,10 @@ function getNativeMasterSize(apkName, flavorToBuild, buildPath) {
   return apkSize;
 }
 
-function getRNBundleMasterSize(flavorToBuild, bundlePath) {
+function getRNBundleMasterSize(bundleCommand, bundlePath) {
   console.log("inside get bundle size method")
   const bundleName = "index.android.bundle"
-  const bundleFlavor = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_1__/* .getBundleFlavor */ .e4)(flavorToBuild)
-  console.log("Bundle flavor :: ", bundleFlavor)
-  ;(0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`yarn bundle:${bundleFlavor}:android`, { encoding: "utf-8" });
+  ;(0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`${bundleCommand}`, { encoding: "utf-8" });
   const sizeOp = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd ${bundlePath} && du -k ${bundleName}`, {
     encoding: "utf-8",
   });
@@ -9571,14 +9569,16 @@ try {
   const flavorToBuild = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("flavor");
   const isRN = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("is-react-native");
   const bp = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_3__/* .getBuildPath */ .HF)(flavorToBuild);
+  const bundleCommand = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("bundle-command")
   const bundlePath = "android/infra/react/src/main/assets/"
   console.log(`Building flavor:  ${flavorToBuild}!`);
   const s0 = (0,_evaluator_evaluator__WEBPACK_IMPORTED_MODULE_1__/* .getMasterBranchSize */ .B)(flavorToBuild, bp, isRN);
-  const s1 = (0,_evaluator_evaluator__WEBPACK_IMPORTED_MODULE_1__/* .getRNBundleMasterSize */ .t)(flavorToBuild, bundlePath)
+  console.log("apk size", s0)
+  const s1 = (0,_evaluator_evaluator__WEBPACK_IMPORTED_MODULE_1__/* .getRNBundleMasterSize */ .t)(bundleCommand, bundlePath)
   console.log("bundle size", s1)
-  await (0,_utils_utils__WEBPACK_IMPORTED_MODULE_3__/* .writeApkMetricsToFile */ .zu)(s0);
-  await (0,_utils_utils__WEBPACK_IMPORTED_MODULE_3__/* .writeBunleMetricsToFile */ .Am)(s1)
-  ;(0,_network__WEBPACK_IMPORTED_MODULE_2__/* .uploadArtifact */ .x)();
+  await (0,_utils_utils__WEBPACK_IMPORTED_MODULE_3__/* .writeMetricsToFile */ .HN)(s0, "apk");
+  await (0,_utils_utils__WEBPACK_IMPORTED_MODULE_3__/* .writeMetricsToFile */ .HN)(s1, "bundle");
+  (0,_network__WEBPACK_IMPORTED_MODULE_2__/* .uploadArtifact */ .x)();
 } catch (error) {
   (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(error.message);
 }
@@ -9619,10 +9619,8 @@ function uploadArtifact(s0) {
 __nccwpck_require__.d(__webpack_exports__, {
   "sJ": () => (/* binding */ getApkName),
   "HF": () => (/* binding */ getBuildPath),
-  "e4": () => (/* binding */ getBundleFlavor),
   "RJ": () => (/* binding */ getPascalCase),
-  "zu": () => (/* binding */ writeApkMetricsToFile),
-  "Am": () => (/* binding */ writeBunleMetricsToFile)
+  "HN": () => (/* binding */ writeMetricsToFile)
 });
 
 // EXTERNAL MODULE: external "child_process"
@@ -9688,44 +9686,14 @@ function getApkName(s) {
   apkNameError();
 }
 
-function getBundleFlavor(buildFlavor) {
-  buildFlavor = buildFlavor.trim()
-  if (buildFlavor.toLowerCase() === "debug") {
-    return "debug"
-  }
-
-  if (buildFlavor.toLowerCase() === "release") {
-    return "release"
-  }
-
-  if (buildFlavor.includes("Debug")) {
-    const fl = buildFlavor.split("Debug")[0];
-    return "debug"
-  }
-
-  if (buildFlavor.includes("Release")) {
-    const fl = buildFlavor.split("Release")[0];
-    return "release"
-  }
-  noFlavorFoundError()
-}
-
-async function writeApkMetricsToFile(s0) {
-  var dict = { master_size: s0 };
+async function writeMetricsToFile(size, metricType) {
+  var dict = { master_size: size };
   var dstring = JSON.stringify(dict);
-  external_fs_default().writeFileSync(`apk-metric.json`, dstring, function (err, result) {
+  var fileName = metricType === 'apk' ? 'apk-metric.json' : 'bundle-metric.json'
+  external_fs_default().writeFileSync(`${fileName}`, dstring, function (err, result) {
     if (err) console.log("writing error", err);
   });
 }
-
-async function writeBunleMetricsToFile(bundleSize) {
-  var dict = { master_size: bundleSize };
-  var dstring = JSON.stringify(dict);
-  external_fs_default().writeFileSync(`bundle-metric.json`, dstring, function (err, result) {
-    if (err) console.log("writing error", err);
-  });
-}
-
 
 /***/ }),
 

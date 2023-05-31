@@ -42,40 +42,11 @@ export function getApkName(s) {
   apkNameError();
 }
 
-export function getBundleFlavor(buildFlavor) {
-  buildFlavor = buildFlavor.trim()
-  if (buildFlavor.toLowerCase() === "debug") {
-    return "debug"
-  }
-
-  if (buildFlavor.toLowerCase() === "release") {
-    return "release"
-  }
-
-  if (buildFlavor.includes("Debug")) {
-    const fl = buildFlavor.split("Debug")[0];
-    return "debug"
-  }
-
-  if (buildFlavor.includes("Release")) {
-    const fl = buildFlavor.split("Release")[0];
-    return "release"
-  }
-  noFlavorFoundError()
-}
-
-export async function writeApkMetricsToFile(s0) {
-  var dict = { master_size: s0 };
+export async function writeMetricsToFile(size, metricType) {
+  var dict = { master_size: size };
   var dstring = JSON.stringify(dict);
-  fs.writeFileSync(`apk-metric.json`, dstring, function (err, result) {
-    if (err) console.log("writing error", err);
-  });
-}
-
-export async function writeBunleMetricsToFile(bundleSize) {
-  var dict = { master_size: bundleSize };
-  var dstring = JSON.stringify(dict);
-  fs.writeFileSync(`bundle-metric.json`, dstring, function (err, result) {
+  var fileName = metricType === 'apk' ? 'apk-metric.json' : 'bundle-metric.json'
+  fs.writeFileSync(`${fileName}`, dstring, function (err, result) {
     if (err) console.log("writing error", err);
   });
 }
