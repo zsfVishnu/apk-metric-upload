@@ -42,13 +42,10 @@ export function getApkName(s) {
   apkNameError();
 }
 
-export async function writeMetricsToFile(apkSize, bundleSize) {
-    var dict = {
-        apk_size: apkSize,
-        bundle_size: bundleSize
-    };
+export async function writeMetricsToFile(size, metricType) {
+    var dict = {master_size: size};
     var dstring = JSON.stringify(dict);
-    var fileName = 'metric.json'
+    var fileName = metricType === 'apk' ? 'apk-metric.json' : 'bundle-metric.json'
     fs.writeFileSync(`${fileName}`, dstring, function (err, result) {
         if (err) console.log("writing error", err);
     });
