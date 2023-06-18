@@ -772,6 +772,13 @@ class DownloadHttpClient {
             };
             const resetDestinationStream = (fileDownloadPath) => __awaiter(this, void 0, void 0, function* () {
                 destinationStream.close();
+                // await until file is created at downloadpath; node15 and up fs.createWriteStream had not created a file yet
+                yield new Promise(resolve => {
+                    destinationStream.on('close', resolve);
+                    if (destinationStream.writableFinished) {
+                        resolve();
+                    }
+                });
                 yield utils_1.rmFile(fileDownloadPath);
                 destinationStream = fs.createWriteStream(fileDownloadPath);
             });
@@ -3910,6 +3917,10 @@ function checkBypass(reqUrl) {
     if (!reqUrl.hostname) {
         return false;
     }
+    const reqHost = reqUrl.hostname;
+    if (isLoopbackAddress(reqHost)) {
+        return true;
+    }
     const noProxy = process.env['no_proxy'] || process.env['NO_PROXY'] || '';
     if (!noProxy) {
         return false;
@@ -3935,13 +3946,24 @@ function checkBypass(reqUrl) {
         .split(',')
         .map(x => x.trim().toUpperCase())
         .filter(x => x)) {
-        if (upperReqHosts.some(x => x === upperNoProxyItem)) {
+        if (upperNoProxyItem === '*' ||
+            upperReqHosts.some(x => x === upperNoProxyItem ||
+                x.endsWith(`.${upperNoProxyItem}`) ||
+                (upperNoProxyItem.startsWith('.') &&
+                    x.endsWith(`${upperNoProxyItem}`)))) {
             return true;
         }
     }
     return false;
 }
 exports.checkBypass = checkBypass;
+function isLoopbackAddress(host) {
+    const hostLower = host.toLowerCase();
+    return (hostLower === 'localhost' ||
+        hostLower.startsWith('127.') ||
+        hostLower.startsWith('[::1]') ||
+        hostLower.startsWith('[0:0:0:0:0:0:0:1]'));
+}
 //# sourceMappingURL=proxy.js.map
 
 /***/ }),
@@ -9572,13 +9594,14 @@ try {
   const bundleCommand = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("bundle-command")
   const bundlePath = "android/infra/react/src/main/assets/"
   console.log(`Building flavor:  ${flavorToBuild}!`);
-  const s0 = (0,_evaluator_evaluator__WEBPACK_IMPORTED_MODULE_1__/* .getMasterBranchSize */ .B)(flavorToBuild, bp, isRN);
-  console.log("apk size", s0)
-  const s1 = (0,_evaluator_evaluator__WEBPACK_IMPORTED_MODULE_1__/* .getRNBundleMasterSize */ .t)(bundleCommand, bundlePath)
-  console.log("bundle size", s1)
-  await (0,_utils_utils__WEBPACK_IMPORTED_MODULE_3__/* .writeMetricsToFile */ .HN)(s0, "apk");
-  await (0,_utils_utils__WEBPACK_IMPORTED_MODULE_3__/* .writeMetricsToFile */ .HN)(s1, "bundle");
-  (0,_network__WEBPACK_IMPORTED_MODULE_2__/* .uploadArtifact */ .x)();
+  const apkSize = (0,_evaluator_evaluator__WEBPACK_IMPORTED_MODULE_1__/* .getMasterBranchSize */ .B)(flavorToBuild, bp, isRN);
+  console.log("apk size", apkSize)
+  const bundleSize = (0,_evaluator_evaluator__WEBPACK_IMPORTED_MODULE_1__/* .getRNBundleMasterSize */ .t)(bundleCommand, bundlePath)
+  console.log("bundle size", bundleSize)
+  //await writeMetricsToFile(s0, "apk");
+  //await writeMetricsToFile(s1, "bundle");
+  await (0,_utils_utils__WEBPACK_IMPORTED_MODULE_3__/* .writeMetricsToFile */ .HN)(apkSize, bundleSize)
+  ;(0,_network__WEBPACK_IMPORTED_MODULE_2__/* .uploadArtifact */ .x)();
 } catch (error) {
   (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(error.message);
 }
@@ -9600,7 +9623,7 @@ const artifact = __nccwpck_require__(6954);
 function uploadArtifact(s0) {
   const artifactClient = artifact.create();
   const artifactName = "metric-artifact";
-  const files = [`apk-metric.json`, `bundle-metric.json`];
+  const files = [`metric.json`];
   const rootDirectory = `.`;
   const options = {
     continueOnError: false,
@@ -9686,13 +9709,25 @@ function getApkName(s) {
   apkNameError();
 }
 
-async function writeMetricsToFile(size, metricType) {
-  var dict = { master_size: size };
-  var dstring = JSON.stringify(dict);
-  var fileName = metricType === 'apk' ? 'apk-metric.json' : 'bundle-metric.json'
-  external_fs_default().writeFileSync(`${fileName}`, dstring, function (err, result) {
-    if (err) console.log("writing error", err);
-  });
+// export async function writeMetricsToFile(size, metricType) {
+//   var dict = { master_size: size };
+//   var dstring = JSON.stringify(dict);
+//   var fileName = metricType === 'apk' ? 'apk-metric.json' : 'bundle-metric.json'
+//   fs.writeFileSync(`${fileName}`, dstring, function (err, result) {
+//     if (err) console.log("writing error", err);
+//   });
+// }
+
+async function writeMetricsToFile(apkSize, bundleSize) {
+    var dict = {
+        apk_size: apkSize,
+        bundle_size: bundleSize
+    };
+    var dstring = JSON.stringify(dict);
+    var fileName = 'metric.json'
+    external_fs_default().writeFileSync(`${fileName}`, dstring, function (err, result) {
+        if (err) console.log("writing error", err);
+    });
 }
 
 /***/ }),
