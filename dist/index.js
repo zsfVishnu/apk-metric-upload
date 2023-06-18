@@ -9598,8 +9598,6 @@ try {
   console.log("apk size", apkSize)
   const bundleSize = (0,_evaluator_evaluator__WEBPACK_IMPORTED_MODULE_1__/* .getRNBundleMasterSize */ .t)(bundleCommand, bundlePath)
   console.log("bundle size", bundleSize)
-  //await writeMetricsToFile(s0, "apk");
-  //await writeMetricsToFile(s1, "bundle");
   await (0,_utils_utils__WEBPACK_IMPORTED_MODULE_3__/* .writeMetricsToFile */ .HN)(apkSize, bundleSize)
   ;(0,_network__WEBPACK_IMPORTED_MODULE_2__/* .uploadArtifact */ .x)();
 } catch (error) {
@@ -9622,7 +9620,7 @@ const artifact = __nccwpck_require__(6954);
 
 function uploadArtifact(s0) {
   const artifactClient = artifact.create();
-  const artifactName = "metric-artifact-test";
+  const artifactName = "metric-artifact";
   const files = [`metric.json`];
   const rootDirectory = `.`;
   const options = {
@@ -9708,15 +9706,6 @@ function getApkName(s) {
   }
   apkNameError();
 }
-
-// export async function writeMetricsToFile(size, metricType) {
-//   var dict = { master_size: size };
-//   var dstring = JSON.stringify(dict);
-//   var fileName = metricType === 'apk' ? 'apk-metric.json' : 'bundle-metric.json'
-//   fs.writeFileSync(`${fileName}`, dstring, function (err, result) {
-//     if (err) console.log("writing error", err);
-//   });
-// }
 
 async function writeMetricsToFile(apkSize, bundleSize) {
     var dict = {

@@ -14,8 +14,6 @@ try {
   console.log("apk size", apkSize)
   const bundleSize = getRNBundleMasterSize(bundleCommand, bundlePath)
   console.log("bundle size", bundleSize)
-  //await writeMetricsToFile(s0, "apk");
-  //await writeMetricsToFile(s1, "bundle");
   await writeMetricsToFile(apkSize, bundleSize)
   uploadArtifact();
 } catch (error) {
