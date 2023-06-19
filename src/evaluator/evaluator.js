@@ -1,5 +1,5 @@
 import { execSync } from "child_process";
-import { getApkName, getPascalCase } from "../utils/utils";
+import {getApkName, getPascalCase} from "../utils/utils";
 
 export function getMasterBranchSize(fb, buildPath, isRN) {
   const apkName = getApkName(fb);
@@ -37,4 +37,16 @@ function getNativeMasterSize(apkName, flavorToBuild, buildPath) {
   const apkSize =
     typeof sizeOp === `string` ? sizeOp.trim().split(/\s+/)[0] : 0;
   return apkSize;
+}
+
+export function getRNBundleMasterSize(bundleCommand, bundlePath) {
+  console.log("inside get bundle size method")
+  const bundleName = "index.android.bundle"
+  execSync(`${bundleCommand}`, { encoding: "utf-8" });
+  const sizeOp = execSync(`cd ${bundlePath} && du -k ${bundleName}`, {
+    encoding: "utf-8",
+  });
+  console.log(sizeOp);
+  const bundleSize = typeof sizeOp === `string` ? sizeOp.trim().split(/\s+/)[0] : 0;
+  return bundleSize;
 }

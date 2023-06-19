@@ -9,6 +9,9 @@ inputs:
     description: "is it a react native project"
     required: false
     default: false
+  bundle-command:
+    description: "Bundle command"
+    required: true
 runs:
   using: "node16"
   main: "dist/index.js"
