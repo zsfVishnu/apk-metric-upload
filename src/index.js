@@ -10,12 +10,11 @@ try {
   const bundleCommand = getInput("bundle-command")
   const bundlePath = "android/infra/react/src/main/assets/"
   console.log(`Building flavor:  ${flavorToBuild}!`);
-  const s0 = getMasterBranchSize(flavorToBuild, bp, isRN);
-  console.log("apk size", s0)
-  const s1 = getRNBundleMasterSize(bundleCommand, bundlePath)
-  console.log("bundle size", s1)
-  await writeMetricsToFile(s0, "apk");
-  await writeMetricsToFile(s1, "bundle");
+  const apkSize = getMasterBranchSize(flavorToBuild, bp, isRN);
+  console.log("APK size", apkSize)
+  const bundleSize = getRNBundleMasterSize(bundleCommand, bundlePath)
+  console.log("Bundle Size", bundleSize)
+  await writeMetricsToFile(apkSize, bundleSize);
   uploadArtifact();
 } catch (error) {
   setFailed(error.message);
