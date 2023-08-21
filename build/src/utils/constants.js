@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ROOT_DIRECTORY = exports.ARTIFACT_FILE_NAME = exports.ARTIFACT_NAME = exports.BUNDLE_NAME = exports.DEBUG = exports.DEBUG_LOWER = exports.RN_OUTPUT_PATH = exports.OUTPUT_PATH = exports.BUNDLE_PATH = void 0;
+exports.BUNDLE_PATH = "android/infra/react/src/main/assets/";
+exports.OUTPUT_PATH = "app/build/outputs/apk/";
+exports.RN_OUTPUT_PATH = "app/build/outputs/apk/";
+exports.DEBUG_LOWER = "debug";
+exports.DEBUG = "Debug";
+exports.BUNDLE_NAME = "index.android.bundle";
+exports.ARTIFACT_NAME = "metric-artifact-new";
+exports.ARTIFACT_FILE_NAME = "metric.json";
+exports.ROOT_DIRECTORY = ".";
