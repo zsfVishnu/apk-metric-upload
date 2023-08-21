@@ -5,14 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "prepare": "ncc build src/index.js -o dist --source-map --license licenses.txt"
+    "prepare": "ncc build build/src/index.js -o dist --source-map --license licenses.txt",
+    "lint": "eslint . --ext .ts"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zsfVishnu/apk-metric-upload.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "zsfVishnu",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/zsfVishnu/apk-metric-upload/issues"
@@ -27,6 +28,9 @@
   "devDependencies": {
     "@babel/preset-env": "^7.20.2",
     "babel-jest": "^29.3.1",
-    "jest": "^27.5.1"
+    "change-case": "^4.1.2",
+    "eslint-plugin-shopify": "^35.1.0",
+    "jest": "^27.5.1",
+    "typescript": "^5.1.6"
   }
 }
