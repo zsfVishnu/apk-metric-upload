@@ -1,7 +1,7 @@
 import { getInput, setFailed } from "@actions/core";
-import { getMasterBranchSize, getRNBundleMasterSize } from "./evaluator/evaluator";
+import {getMasterBranchSize, getRNBundleMasterSize} from "./evaluator/evaluator";
 import { uploadArtifact } from "./network";
-import { getBuildPath, writeMetricsToFile } from "./utils/utils";
+import {getBuildPath, getPascalCase, writeMetricsToFile, writeBunleMetricsToFile} from "./utils/utils";
 
 try {
   const flavorToBuild = getInput("flavor");
@@ -16,15 +16,6 @@ try {
   console.log("Bundle Size", bundleSize)
   await writeMetricsToFile(apkSize, bundleSize);
   uploadArtifact();
-
-  const metrics = {
-    apk: apkSize,
-    bundle: bundleSize
-  }
-
-  return {
-    size: metrics
-  }
 } catch (error) {
   setFailed(error.message);
 }
