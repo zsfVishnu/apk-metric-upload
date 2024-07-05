@@ -1,4 +1,4 @@
-import { getInput, setFailed } from "@actions/core";
+import { getInput, setFailed, setOutput } from "@actions/core";
 import { getMasterBranchSize, getRNBundleMasterSize } from "./evaluator/evaluator";
 import { uploadArtifact } from "./network";
 import { getBuildPath, writeMetricsToFile } from "./utils/utils";
@@ -17,14 +17,12 @@ try {
   await writeMetricsToFile(apkSize, bundleSize);
   uploadArtifact();
 
-  const metrics = {
+  const size = {
     apk: apkSize,
     bundle: bundleSize
   }
 
-  return {
-    size: metrics
-  }
+  setOutput('size', size);
 } catch (error) {
   setFailed(error.message);
 }
