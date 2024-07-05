@@ -17,12 +17,14 @@ try {
   await writeMetricsToFile(apkSize, bundleSize);
   uploadArtifact();
 
-  const size = {
+  const metrics = {
     apk: apkSize,
     bundle: bundleSize
   }
 
-  core.setOutput('size', size);
+  return {
+    size: metrics
+  }
 } catch (error) {
   setFailed(error.message);
 }
