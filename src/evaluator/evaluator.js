@@ -1,5 +1,7 @@
 import { execSync } from "child_process";
 import {getApkName, getPascalCase} from "../utils/utils";
+import fs from 'fs'
+import path from 'path'
 
 export function getMasterBranchSize(fb, buildPath, isRN) {
   const apkName = getApkName(fb);
@@ -15,38 +17,26 @@ function getRNMasterSize(apkName, flavorToBuild, buildPath) {
       encoding: "utf-8",
     })
   );
-
-  const sizeOp = execSync(`cd android/${buildPath} && du -k ${apkName}`, {
-    encoding: "utf-8",
-  });
-
-  console.log(sizeOp);
-  console.log(sizeOp);
-
-  const apkSize =
-    typeof sizeOp === `string` ? sizeOp.trim().split(/\s+/)[0] : 0;
-
-  return apkSize;
+  const apkPath = path.join(buildPath, apkName)
+  const stats = fs.statSync(apkPath)
+  const apkSize = stats.size / 1024
+  return apkSize
 }
 
 function getNativeMasterSize(apkName, flavorToBuild, buildPath) {
   execSync(`./gradlew assemble${flavorToBuild}`, { encoding: "utf-8" });
-  const sizeOp = execSync(`cd ${buildPath} && du -k ${apkName}`, {
-    encoding: "utf-8",
-  });
-  const apkSize =
-    typeof sizeOp === `string` ? sizeOp.trim().split(/\s+/)[0] : 0;
-  return apkSize;
+  const apkPath = path.join(buildPath, apkName)
+  const stats = fs.statSync(apkPath)
+  const apkSize = stats.size / 1024
+  return apkSize
 }
 
 export function getRNBundleMasterSize(bundleCommand, bundlePath) {
-  console.log("inside get bundle size method")
   const bundleName = "index.android.bundle"
   execSync(`${bundleCommand}`, { encoding: "utf-8" });
-  const sizeOp = execSync(`cd ${bundlePath} && du -k ${bundleName}`, {
-    encoding: "utf-8",
-  });
-  console.log(sizeOp);
-  const bundleSize = typeof sizeOp === `string` ? sizeOp.trim().split(/\s+/)[0] : 0;
-  return bundleSize;
+
+  const bundlePath = path.join(bundlePath, bundleName)
+  const stats = fs.statSync(bundlePath)
+  const bundleSize = stats.size / 1024
+  return bundleSize
 }
