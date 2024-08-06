@@ -35,8 +35,8 @@ export function getRNBundleMasterSize(bundleCommand, bundlePath) {
   const bundleName = "index.android.bundle"
   execSync(`${bundleCommand}`, { encoding: "utf-8" });
 
-  const bundlePath = path.join(bundlePath, bundleName)
-  const stats = fs.statSync(bundlePath)
+  const bp = path.join(bundlePath, bundleName)
+  const stats = fs.statSync(bp)
   const bundleSize = stats.size / 1024
   return bundleSize
 }

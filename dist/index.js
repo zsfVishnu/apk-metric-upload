@@ -1,4 +1,4 @@
-require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 6954:
@@ -772,13 +772,6 @@ class DownloadHttpClient {
             };
             const resetDestinationStream = (fileDownloadPath) => __awaiter(this, void 0, void 0, function* () {
                 destinationStream.close();
-                // await until file is created at downloadpath; node15 and up fs.createWriteStream had not created a file yet
-                yield new Promise(resolve => {
-                    destinationStream.on('close', resolve);
-                    if (destinationStream.writableFinished) {
-                        resolve();
-                    }
-                });
                 yield utils_1.rmFile(fileDownloadPath);
                 destinationStream = fs.createWriteStream(fileDownloadPath);
             });
@@ -3917,10 +3910,6 @@ function checkBypass(reqUrl) {
     if (!reqUrl.hostname) {
         return false;
     }
-    const reqHost = reqUrl.hostname;
-    if (isLoopbackAddress(reqHost)) {
-        return true;
-    }
     const noProxy = process.env['no_proxy'] || process.env['NO_PROXY'] || '';
     if (!noProxy) {
         return false;
@@ -3946,24 +3935,13 @@ function checkBypass(reqUrl) {
         .split(',')
         .map(x => x.trim().toUpperCase())
         .filter(x => x)) {
-        if (upperNoProxyItem === '*' ||
-            upperReqHosts.some(x => x === upperNoProxyItem ||
-                x.endsWith(`.${upperNoProxyItem}`) ||
-                (upperNoProxyItem.startsWith('.') &&
-                    x.endsWith(`${upperNoProxyItem}`)))) {
+        if (upperReqHosts.some(x => x === upperNoProxyItem)) {
             return true;
         }
     }
     return false;
 }
 exports.checkBypass = checkBypass;
-function isLoopbackAddress(host) {
-    const hostLower = host.toLowerCase();
-    return (hostLower === 'localhost' ||
-        hostLower.startsWith('127.') ||
-        hostLower.startsWith('[::1]') ||
-        hostLower.startsWith('[0:0:0:0:0:0:0:1]'));
-}
 //# sourceMappingURL=proxy.js.map
 
 /***/ }),
@@ -9515,6 +9493,12 @@ function wrappy (fn, cb) {
 /* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2081);
 /* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(child_process__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _utils_utils__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(5976);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(7147);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(fs__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(1017);
+/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(path__WEBPACK_IMPORTED_MODULE_3__);
+
+
 
 
 
@@ -9532,40 +9516,28 @@ function getRNMasterSize(apkName, flavorToBuild, buildPath) {
       encoding: "utf-8",
     })
   );
-
-  const sizeOp = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd android/${buildPath} && du -k ${apkName}`, {
-    encoding: "utf-8",
-  });
-
-  console.log(sizeOp);
-  console.log(sizeOp);
-
-  const apkSize =
-    typeof sizeOp === `string` ? sizeOp.trim().split(/\s+/)[0] : 0;
-
-  return apkSize;
+  const apkPath = path__WEBPACK_IMPORTED_MODULE_3___default().join(buildPath, apkName)
+  const stats = fs__WEBPACK_IMPORTED_MODULE_2___default().statSync(apkPath)
+  const apkSize = stats.size / 1024
+  return apkSize
 }
 
 function getNativeMasterSize(apkName, flavorToBuild, buildPath) {
   (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`./gradlew assemble${flavorToBuild}`, { encoding: "utf-8" });
-  const sizeOp = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd ${buildPath} && du -k ${apkName}`, {
-    encoding: "utf-8",
-  });
-  const apkSize =
-    typeof sizeOp === `string` ? sizeOp.trim().split(/\s+/)[0] : 0;
-  return apkSize;
+  const apkPath = path__WEBPACK_IMPORTED_MODULE_3___default().join(buildPath, apkName)
+  const stats = fs__WEBPACK_IMPORTED_MODULE_2___default().statSync(apkPath)
+  const apkSize = stats.size / 1024
+  return apkSize
 }
 
 function getRNBundleMasterSize(bundleCommand, bundlePath) {
-  console.log("inside get bundle size method")
   const bundleName = "index.android.bundle"
   ;(0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`${bundleCommand}`, { encoding: "utf-8" });
-  const sizeOp = (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd ${bundlePath} && du -k ${bundleName}`, {
-    encoding: "utf-8",
-  });
-  console.log(sizeOp);
-  const bundleSize = typeof sizeOp === `string` ? sizeOp.trim().split(/\s+/)[0] : 0;
-  return bundleSize;
+
+  const bp = path__WEBPACK_IMPORTED_MODULE_3___default().join(bundlePath, bundleName)
+  const stats = fs__WEBPACK_IMPORTED_MODULE_2___default().statSync(bp)
+  const bundleSize = stats.size / 1024
+  return bundleSize
 }
 
 
@@ -9575,7 +9547,7 @@ function getRNBundleMasterSize(bundleCommand, bundlePath) {
 /***/ ((module, __webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
-__nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
+__nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__) => {
 __nccwpck_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(6024);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
@@ -9600,12 +9572,19 @@ try {
   console.log("Bundle Size", bundleSize)
   await (0,_utils_utils__WEBPACK_IMPORTED_MODULE_3__/* .writeMetricsToFile */ .HN)(apkSize, bundleSize);
   (0,_network__WEBPACK_IMPORTED_MODULE_2__/* .uploadArtifact */ .x)();
+
+  const size = {
+    apk: apkSize,
+    bundle: bundleSize
+  }
+
+  ;(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput)('size', size);
 } catch (error) {
   (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(error.message);
 }
 
-__webpack_async_result__();
-} catch(e) { __webpack_async_result__(e); } }, 1);
+__webpack_handle_async_dependencies__();
+}, 1);
 
 /***/ }),
 
@@ -9884,70 +9863,75 @@ module.exports = require("zlib");
 /************************************************************************/
 /******/ 	/* webpack/runtime/async module */
 /******/ 	(() => {
-/******/ 		var webpackQueues = typeof Symbol === "function" ? Symbol("webpack queues") : "__webpack_queues__";
+/******/ 		var webpackThen = typeof Symbol === "function" ? Symbol("webpack then") : "__webpack_then__";
 /******/ 		var webpackExports = typeof Symbol === "function" ? Symbol("webpack exports") : "__webpack_exports__";
-/******/ 		var webpackError = typeof Symbol === "function" ? Symbol("webpack error") : "__webpack_error__";
-/******/ 		var resolveQueue = (queue) => {
-/******/ 			if(queue && !queue.d) {
-/******/ 				queue.d = 1;
+/******/ 		var completeQueue = (queue) => {
+/******/ 			if(queue) {
 /******/ 				queue.forEach((fn) => (fn.r--));
 /******/ 				queue.forEach((fn) => (fn.r-- ? fn.r++ : fn()));
 /******/ 			}
 /******/ 		}
+/******/ 		var completeFunction = (fn) => (!--fn.r && fn());
+/******/ 		var queueFunction = (queue, fn) => (queue ? queue.push(fn) : completeFunction(fn));
 /******/ 		var wrapDeps = (deps) => (deps.map((dep) => {
 /******/ 			if(dep !== null && typeof dep === "object") {
-/******/ 				if(dep[webpackQueues]) return dep;
+/******/ 				if(dep[webpackThen]) return dep;
 /******/ 				if(dep.then) {
 /******/ 					var queue = [];
-/******/ 					queue.d = 0;
 /******/ 					dep.then((r) => {
 /******/ 						obj[webpackExports] = r;
-/******/ 						resolveQueue(queue);
-/******/ 					}, (e) => {
-/******/ 						obj[webpackError] = e;
-/******/ 						resolveQueue(queue);
+/******/ 						completeQueue(queue);
+/******/ 						queue = 0;
 /******/ 					});
 /******/ 					var obj = {};
-/******/ 					obj[webpackQueues] = (fn) => (fn(queue));
+/******/ 												obj[webpackThen] = (fn, reject) => (queueFunction(queue, fn), dep['catch'](reject));
 /******/ 					return obj;
 /******/ 				}
 /******/ 			}
 /******/ 			var ret = {};
-/******/ 			ret[webpackQueues] = x => {};
-/******/ 			ret[webpackExports] = dep;
-/******/ 			return ret;
+/******/ 								ret[webpackThen] = (fn) => (completeFunction(fn));
+/******/ 								ret[webpackExports] = dep;
+/******/ 								return ret;
 /******/ 		}));
 /******/ 		__nccwpck_require__.a = (module, body, hasAwait) => {
-/******/ 			var queue;
-/******/ 			hasAwait && ((queue = []).d = 1);
-/******/ 			var depQueues = new Set();
+/******/ 			var queue = hasAwait && [];
 /******/ 			var exports = module.exports;
 /******/ 			var currentDeps;
 /******/ 			var outerResolve;
 /******/ 			var reject;
+/******/ 			var isEvaluating = true;
+/******/ 			var nested = false;
+/******/ 			var whenAll = (deps, onResolve, onReject) => {
+/******/ 				if (nested) return;
+/******/ 				nested = true;
+/******/ 				onResolve.r += deps.length;
+/******/ 				deps.map((dep, i) => (dep[webpackThen](onResolve, onReject)));
+/******/ 				nested = false;
+/******/ 			};
 /******/ 			var promise = new Promise((resolve, rej) => {
 /******/ 				reject = rej;
-/******/ 				outerResolve = resolve;
+/******/ 				outerResolve = () => (resolve(exports), completeQueue(queue), queue = 0);
 /******/ 			});
 /******/ 			promise[webpackExports] = exports;
-/******/ 			promise[webpackQueues] = (fn) => (queue && fn(queue), depQueues.forEach(fn), promise["catch"](x => {}));
+/******/ 			promise[webpackThen] = (fn, rejectFn) => {
+/******/ 				if (isEvaluating) { return completeFunction(fn); }
+/******/ 				if (currentDeps) whenAll(currentDeps, fn, rejectFn);
+/******/ 				queueFunction(queue, fn);
+/******/ 				promise['catch'](rejectFn);
+/******/ 			};
 /******/ 			module.exports = promise;
 /******/ 			body((deps) => {
+/******/ 				if(!deps) return outerResolve();
 /******/ 				currentDeps = wrapDeps(deps);
-/******/ 				var fn;
-/******/ 				var getResult = () => (currentDeps.map((d) => {
-/******/ 					if(d[webpackError]) throw d[webpackError];
-/******/ 					return d[webpackExports];
-/******/ 				}))
-/******/ 				var promise = new Promise((resolve) => {
-/******/ 					fn = () => (resolve(getResult));
+/******/ 				var fn, result;
+/******/ 				var promise = new Promise((resolve, reject) => {
+/******/ 					fn = () => (resolve(result = currentDeps.map((d) => (d[webpackExports]))));
 /******/ 					fn.r = 0;
-/******/ 					var fnQueue = (q) => (q !== queue && !depQueues.has(q) && (depQueues.add(q), q && !q.d && (fn.r++, q.push(fn))));
-/******/ 					currentDeps.map((dep) => (dep[webpackQueues](fnQueue)));
+/******/ 					whenAll(currentDeps, fn, reject);
 /******/ 				});
-/******/ 				return fn.r ? promise : getResult();
-/******/ 			}, (err) => ((err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue)));
-/******/ 			queue && (queue.d = 0);
+/******/ 				return fn.r ? promise : result;
+/******/ 			}).then(outerResolve, reject);
+/******/ 			isEvaluating = false;
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -10005,4 +9989,3 @@ module.exports = require("zlib");
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=index.js.map
