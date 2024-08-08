@@ -3,29 +3,29 @@ import {getApkName, getPascalCase} from "../utils/utils";
 import fs from 'fs'
 import path from 'path'
 
-export function getMasterBranchSize(fb, buildPath, isRN) {
+export function getMasterBranchSize(wdir,fb, buildPath, isRN) {
   const apkName = getApkName(fb);
   const flavorToBuild = getPascalCase(fb);
   return isRN === "true"
-    ? getRNMasterSize(apkName, flavorToBuild, buildPath)
-    : getNativeMasterSize(apkName, flavorToBuild, buildPath);
+    ? getRNMasterSize(wdir,apkName, flavorToBuild, buildPath)
+    : getNativeMasterSize(wdir,apkName, flavorToBuild, buildPath);
 }
 
-function getRNMasterSize(apkName, flavorToBuild, buildPath) {
+function getRNMasterSize(wdir,apkName, flavorToBuild, buildPath) {
   console.log(
     execSync(`cd android && ./gradlew assemble${flavorToBuild}`, {
       encoding: "utf-8",
     })
   );
-  const apkPath = path.join(buildPath, apkName)
+  const apkPath = path.join(wdir,buildPath, apkName)
   const stats = fs.statSync(apkPath)
   const apkSize = stats.size / 1024
   return apkSize
 }
 
-function getNativeMasterSize(apkName, flavorToBuild, buildPath) {
+function getNativeMasterSize(wdir,apkName, flavorToBuild, buildPath) {
   execSync(`./gradlew assemble${flavorToBuild}`, { encoding: "utf-8" });
-  const apkPath = path.join(buildPath, apkName)
+  const apkPath = path.join(wdir,buildPath, apkName)
   const stats = fs.statSync(apkPath)
   const apkSize = stats.size / 1024
   return apkSize
