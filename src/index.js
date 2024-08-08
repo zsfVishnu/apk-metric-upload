@@ -9,8 +9,10 @@ try {
   const bp = getBuildPath(flavorToBuild);
   const bundleCommand = getInput("bundle-command")
   const bundlePath = "android/infra/react/src/main/assets/"
+  const wdir = getInput("workingDir");
+  console.log("working dir :: ", wdir)
   console.log(`Building flavor:  ${flavorToBuild}!`);
-  const apkSize = getMasterBranchSize(flavorToBuild, bp, isRN);
+  const apkSize = getMasterBranchSize(wdir,flavorToBuild, bp, isRN);
   console.log("APK size", apkSize)
   const bundleSize = getRNBundleMasterSize(bundleCommand, bundlePath)
   console.log("Bundle Size", bundleSize)

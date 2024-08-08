@@ -9502,29 +9502,29 @@ function wrappy (fn, cb) {
 
 
 
-function getMasterBranchSize(fb, buildPath, isRN) {
+function getMasterBranchSize(wdir,fb, buildPath, isRN) {
   const apkName = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_1__/* .getApkName */ .sJ)(fb);
   const flavorToBuild = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_1__/* .getPascalCase */ .RJ)(fb);
   return isRN === "true"
-    ? getRNMasterSize(apkName, flavorToBuild, buildPath)
-    : getNativeMasterSize(apkName, flavorToBuild, buildPath);
+    ? getRNMasterSize(wdir,apkName, flavorToBuild, buildPath)
+    : getNativeMasterSize(wdir,apkName, flavorToBuild, buildPath);
 }
 
-function getRNMasterSize(apkName, flavorToBuild, buildPath) {
+function getRNMasterSize(wdir,apkName, flavorToBuild, buildPath) {
   console.log(
     (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`cd android && ./gradlew assemble${flavorToBuild}`, {
       encoding: "utf-8",
     })
   );
-  const apkPath = path__WEBPACK_IMPORTED_MODULE_3___default().join(buildPath, apkName)
+  const apkPath = path__WEBPACK_IMPORTED_MODULE_3___default().join(wdir,buildPath, apkName)
   const stats = fs__WEBPACK_IMPORTED_MODULE_2___default().statSync(apkPath)
   const apkSize = stats.size / 1024
   return apkSize
 }
 
-function getNativeMasterSize(apkName, flavorToBuild, buildPath) {
+function getNativeMasterSize(wdir,apkName, flavorToBuild, buildPath) {
   (0,child_process__WEBPACK_IMPORTED_MODULE_0__.execSync)(`./gradlew assemble${flavorToBuild}`, { encoding: "utf-8" });
-  const apkPath = path__WEBPACK_IMPORTED_MODULE_3___default().join(buildPath, apkName)
+  const apkPath = path__WEBPACK_IMPORTED_MODULE_3___default().join(wdir,buildPath, apkName)
   const stats = fs__WEBPACK_IMPORTED_MODULE_2___default().statSync(apkPath)
   const apkSize = stats.size / 1024
   return apkSize
@@ -9565,8 +9565,10 @@ try {
   const bp = (0,_utils_utils__WEBPACK_IMPORTED_MODULE_3__/* .getBuildPath */ .HF)(flavorToBuild);
   const bundleCommand = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("bundle-command")
   const bundlePath = "android/infra/react/src/main/assets/"
+  const wdir = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("workingDir");
+  console.log("working dir :: ", wdir)
   console.log(`Building flavor:  ${flavorToBuild}!`);
-  const apkSize = (0,_evaluator_evaluator__WEBPACK_IMPORTED_MODULE_1__/* .getMasterBranchSize */ .B)(flavorToBuild, bp, isRN);
+  const apkSize = (0,_evaluator_evaluator__WEBPACK_IMPORTED_MODULE_1__/* .getMasterBranchSize */ .B)(wdir,flavorToBuild, bp, isRN);
   console.log("APK size", apkSize)
   const bundleSize = (0,_evaluator_evaluator__WEBPACK_IMPORTED_MODULE_1__/* .getRNBundleMasterSize */ .t)(bundleCommand, bundlePath)
   console.log("Bundle Size", bundleSize)
