@@ -5,13 +5,17 @@ inputs:
     description: "debug flavor of the apk to build"
     required: true
     default: "debug"
-  is-react-native:
+  is_react_native:
     description: "is it a react native project"
     required: false
     default: false
-  bundle-command:
+  bundle_command:
     description: "Bundle command"
     required: true
+  stream_output_max_buffer:
+    description: "stream output max buffer size"
+    required: false
+    default: "1"
 runs:
   using: "node16"
   main: "dist/index.js"
